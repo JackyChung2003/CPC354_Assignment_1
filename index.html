@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <title>3D Gasket TV Ident</title>
+
+    <!-- WebGL Utilities -->
+
+    <script type="text/javascript" src="Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="Common/initShaders.js"></script>
+    <script type="text/javascript" src="Common/MV.js"></script>
+
+    <!-- Link to Custom JS -->
+    <script type="text/javascript" src="gasket-tv-ident.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <!-- Vertex Shader Section-->
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      // Declare the global variable(s) for draw calls
+      uniform mat4 projectionMatrix;
+      uniform mat4 modelViewMatrix;
+
+      // Declare the input variable(s) to receive per-vertex data from the application
+      attribute vec4 vPosition;
+      attribute vec4 vColor;
+      attribute vec2 vTexCoord;
+      uniform vec2 transform; // Transformation vector for movement
+
+      // Declare the varying variable(s) to pass data to the fragment shader
+      varying vec4 fColor;
+      varying vec2 fTexCoord;
+
+      void main()
+      {
+      	// gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition.xy + transform, vPosition.z, 1.0);
+      	fColor = vColor;
+      	fTexCoord = vTexCoord;
+      }
+    </script>
+
+    <!-- Fragment Shader Section-->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4 fColor;
+      varying vec2 fTexCoord;
+      uniform sampler2D texture;
+
+      void main()
+      {
+      	gl_FragColor = fColor * texture2D(texture, fTexCoord);
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- Canvas for the graphic rendering -->
+    <div class="canvas">
+      <canvas id="gl-canvas" width="1280" height="720">
+        Error: your browser doesn't support the HTML5 canvas element
+      </canvas>
+      <img
+        id="texture-1"
+        src="https://i.postimg.cc/kMKrJd9B/BG001.jpg"
+        alt="texture 1"
+        crossorigin="anonymous"
+        hidden
+      />
+      <img
+        id="texture-2"
+        src="https://i.postimg.cc/05zfT3Fr/BG002.jpg"
+        alt="texture 2"
+        crossorigin="anonymous"
+        hidden
+      />
+      <img
+        id="texture-3"
+        src="https://i.postimg.cc/15ppPZHR/BG003.jpg"
+        alt="texture 3"
+        crossorigin="anonymous"
+        hidden
+      />
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+      <!-- Subdivision Slider -->
+      <div class="param-panel">
+        <div class="slider">
+          Number of Subdivisions:
+          <br />1<input
+            id="subdiv-slider"
+            type="range"
+            min="1"
+            max="5"
+            value="3"
+          />5
+        </div>
+        <div class="textbox">
+          <p id="subdiv-value">3</p>
+        </div>
+      </div>
+
+      <!-- Rotation Axis -->
+      <div class="param-panel">
+        <label>Rotation Axis:</label>
+        <div>
+          <input type="radio" id="rotateX" name="rotation-axis" value="x" />
+          <label for="rotateX">X</label>
+          <input type="radio" id="rotateY" name="rotation-axis" value="y" />
+          <label for="rotateY">Y</label>
+          <input
+            type="radio"
+            id="rotateZ"
+            name="rotation-axis"
+            value="z"
+            checked
+          />
+          <label for="rotateZ">Z</label>
+        </div>
+      </div>
+
+      <!-- Initial Size Slider -->
+      <div class="param-panel">
+        <label for="size-slider">Initial Size:</label>
+        <div class="slider">
+          Initial Size:
+          <br />0.5<input
+            id="size-slider"
+            type="range"
+            min="0.5"
+            max="2"
+            step="0.1"
+            value="1.0"
+          />2
+        </div>
+        <div class="textbox">
+          <p id="size-value">1.0</p>
+        </div>
+      </div>
+
+      <!-- Enlargement Scale -->
+      <div class="param-panel">
+        <div class="slider">
+          Enlargement Scale:
+          <br />1<input
+            id="scale-slider"
+            type="range"
+            min="1"
+            max="3"
+            step="0.1"
+            value="1.5"
+          />3
+        </div>
+        <div class="textbox">
+          <p id="scale-value">1.5</p>
+        </div>
+      </div>
+
+      <!-- Speed Slider -->
+      <div class="param-panel">
+        <!-- <div class="slider">
+          Speed:
+          <br />0.1<input
+            id="speed-slider"
+            type="range"
+            min="0.1"
+            max="1"
+            step="0.1"
+            value="0.5"
+          />1
+        </div>
+        <div class="textbox">
+          <p id="speed-value">0.5</p> -->
+        <label for="speed-slider">Speed:</label>
+        <input id="speed-slider" type="range" min="1" max="10" value="1" />
+        <span id="speed-value">1</span>x
+      </div>
+
+      <!-- Background Color Picker -->
+      <div class="param-panel">
+        <label for="bg-color">Background Color:</label>
+        <input type="color" id="bg-color" value="#ffffff" />
+      </div>
+
+      <!-- Radio buttons for for textures -->
+      <div class="param-panel horizontal-align mg-top-bottom">
+        <div class="checkText">Enable Texture 1</div>
+        <input
+          class="checkRadio"
+          id="check-texture-1"
+          type="radio"
+          name="radio"
+          checked
+        />
+      </div>
+
+      <div class="param-panel horizontal-align mg-top-bottom">
+        <div class="checkText">Enable Texture 2</div>
+        <input
+          class="checkRadio"
+          id="check-texture-2"
+          type="radio"
+          name="radio"
+        />
+      </div>
+
+      <div class="param-panel horizontal-align mg-top-bottom">
+        <div class="checkText">Enable Texture 3</div>
+        <input
+          class="checkRadio"
+          id="check-texture-3"
+          type="radio"
+          name="radio"
+        />
+      </div>
+
+      <!-- Toggles -->
+      <div class="param-panel">
+        <div>
+          <input type="checkbox" id="toggle-wall-color" />
+          <label for="toggle-wall-color">Hit Wall & Random Color</label>
+        </div>
+        <div>
+          <input type="checkbox" id="toggle-wall-axis" />
+          <label for="toggle-wall-axis">Hit Wall & Random Axis</label>
+        </div>
+        <div>
+          <input type="checkbox" id="toggle-wall-vibrate" />
+          <label for="toggle-wall-vibrate">Hit Wall & Vibration</label>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-panel">
+        <button id="start-animation-btn">Start</button>
+        <button id="reset-gasket-btn">Reset Gasket</button>
+        <button id="reset-settings-btn">Reset All Settings</button>
+      </div>
+    </div>
+  </body>
+</html>
