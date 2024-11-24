@@ -20,6 +20,12 @@ var theta = [0, 0, 0], move = [0, 0, 0];
 
 var axis = 2; // Default axis for rotation (0: X-axis, 1: Y-axis, 2: Z-axis)
 
+// Add boundary hit count variable
+var boundaryHitCount = 0;
+
+// Checkbox references for random colour, random axis and random vibration
+var toggleWallColor, toggleWallAxis, toggleWallVibrate;
+
 // var subdivNum = 3, iterNum = 1, scaleNum = 1;
 
 var subdivNum = 3, scaleNum = 1.0, enlargeScale = 1.5;
@@ -143,8 +149,8 @@ function getUIElement()
     sizeSlider = document.getElementById("size-slider");
     sizeValue = document.getElementById("size-value");
 
-    scaleSlider = document.getElementById("scale-slider");
-    scaleValue = document.getElementById("scale-value");
+    // scaleSlider = document.getElementById("scale-slider");
+    // scaleValue = document.getElementById("scale-value");
 
     speedSlider = document.getElementById("speed-slider");
     speedValue = document.getElementById("speed-value");
@@ -176,6 +182,9 @@ function getUIElement()
     toggleWallAxis = document.getElementById("toggle-wall-axis");
     toggleWallVibrate = document.getElementById("toggle-wall-vibrate");
 
+    // Checkboxes
+    // toggleHitWallRandomAxis = document.getElementById("toggle-hit-wall-random-axis");
+
     // Buttons
     startAnimationBtn = document.getElementById("start-animation-btn");
     resetGasketBtn = document.getElementById("reset-gasket-btn");
@@ -186,7 +195,7 @@ function getUIElement()
 	{
 		subdivNum = event.target.value;
 		subdivValue.innerHTML = subdivNum;
-        firstTime = false;
+        // firstTime = false;
         recompute();
     };
 
@@ -226,14 +235,32 @@ function getUIElement()
 
 
     // Enlargement Scale Slider
-    scaleSlider.onchange = function(event)
-    {
-        scaleNum = event.target.value;
-        scaleValue.innerHTML = scaleNum;
-        enlargeScale = scaleNum;
-        recalcBoundary();
-        render();
-    };
+    // scaleSlider.onchange = function(event)
+    // {
+    //     scaleNum = event.target.value;
+    //     scaleValue.innerHTML = scaleNum;
+    //     enlargeScale = scaleNum;
+    //     recalcBoundary();
+    //     render();
+    // };
+
+    // scaleSlider.addEventListener("input", function() {
+    //     scaleValue = parseFloat(scaleSlider.value);
+    //     firstTime = false;
+    //     document.getElementById("scale-value").innerHTML = scaleValue;
+    //     // recalcBoundary();
+    //     // recompute();
+    //     // Update the scaling for the gasket without recomputing the geometry
+    //     modelViewMatrix = mat4();
+    //     modelViewMatrix = mult(modelViewMatrix, scale(scaleValue, scaleValue, scaleValue));
+    //     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+        
+    //     // Clear and redraw the scene with the updated modelViewMatrix
+    //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    //     gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
+    //     gl.drawArrays(gl.TRIANGLES, 0, points.length);
+    // }
+    // );
 
     // Speed Slider
     speedSlider.onchange = function(event)
@@ -421,15 +448,6 @@ function recalcBoundary() {
     // bottomBoundary = -1 + (0.4 * (sizeValue - 1.5)); // Bottom boundary shifts upwards as scale increases
 
     // Calculate hBoundary
-    // hBoundary = 2.5 * (1 / sizeValue) - 0.6;
-
-    // // Calculate topBoundary
-    // topBoundary = 1.5 * (1 / sizeValue) - 0.75;
-
-    // // Calculate bottomBoundary
-    // bottomBoundary = -1.7 * (1 / sizeValue) + 0.7;
-
-    // Calculate hBoundary
     hBoundary = 2.68 * (1 / sizeValue) - 0.81;
 
     // Calculate topBoundary
@@ -444,7 +462,12 @@ function recalcBoundary() {
     console.log("Top Boundary:", topBoundary);
     console.log("Bottom Boundary:", bottomBoundary);
 
-    // while sizeValue = 1.0
+    // while sizeValue = 1.0 and scaleNum = 1.5
+    // var hBoundary = 1.87;
+    // var topBoundary = 0.73125; 
+    // var bottomBoundary = -0.89;
+
+    // whien sizeValue = 1.0 and scaleNum = 1.0
     // var hBoundary = 1.87;
     // var topBoundary = 0.73125; 
     // var bottomBoundary = -0.89;
@@ -495,7 +518,7 @@ function animUpdate()
     {
         case 0: // Rotate to the right 180 degrees clockwise
             // theta[2] += 1;
-            theta[axis] += 2.0;
+            theta[axis] += 2.0 * speed;
             if (theta[axis] >= 180) {
                 theta[axis] = 180;
                 animSeq++;
@@ -504,7 +527,7 @@ function animUpdate()
 
         case 1: // Rotate back to the original position
             // theta[2] -= 1;
-            theta[axis] -= 2.0;
+            theta[axis] -= 2.0 * speed;
             if (theta[axis] <= 0) {
                 theta[axis] = 0;
                 animSeq++;
@@ -513,7 +536,7 @@ function animUpdate()
 
         case 2: // Rotate to the left 180 degrees anti-clockwise
             // theta[2] -= 1;
-            theta[axis] -= 2.0;
+            theta[axis] -= 2.0 * speed;
             if (theta[axis] <= -180) {
                 theta[axis] = -180;
                 animSeq++;
@@ -522,7 +545,7 @@ function animUpdate()
         
         case 3: // Rotate back to the original position
             // theta[2] += 1;
-            theta[axis] += 2.0;
+            theta[axis] += 2.0 * speed;
             if (theta[axis] >= 0) {
                 theta[axis] = 0;
                 animSeq++;
@@ -531,7 +554,7 @@ function animUpdate()
         
         case 4: // Gradually enlarge the size of gasket
             console.log(`enlargeScale = ${enlargeScale}`);
-            scaleNum += 0.01;
+            scaleNum += 0.01 * speed;
             if (scaleNum >= enlargeScale) {
                 scaleNum = enlargeScale;
                 animSeq++;
@@ -546,23 +569,55 @@ function animUpdate()
             if (move[0] > hBoundary || move[0] < -hBoundary) {
                 // Reverse horizontal movement direction
                 moveDir[0] *= -1; // Reverse horizontal direction
+                boundaryHitCount++; // Increment boundary hit count
+                console.log(`Boundary Hit Count: ${boundaryHitCount}`);
+
+                // Check if "Hit Wall & Random Axis" is checked
+                // if (toggleWallAxis && toggleWallAxis.checked) {
+                //     axis = getRandomAxis();
+                //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
+                // }
+
+                axis = getRandomAxis(); // Get a new random rotation axis
+                console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
+
+                // changeGasketColors();
             }
 
             if (move[1] >= topBoundary || move[1] < bottomBoundary) {
                 // Reverse vertical movement direction
                 // move[1] = Math.sign(move[1]) * (move[1] > 0 ? topBoundary : bottomBoundary);
                 moveDir[1] *= -1; // Reverse vertical direction
+                boundaryHitCount++; // Increment boundary hit count
+                console.log(`Boundary Hit Count: ${boundaryHitCount}`);
+
+                // Check if "Hit Wall & Random Axis" is checked
+                // if (toggleWallAxis && toggleWallAxis.checked) {
+                //     axis = getRandomAxis();
+                //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
+                // }
+
+                axis = getRandomAxis(); // Get a new random rotation axis
+                console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
+
+                // changeGasketColors();
             }
             // move[0] += moveDir[0] * 0.01;
             // move[1] += moveDir[1] * 0.01;
             // Update position based on direction and speed
             move[0] += 0.01 * speed * moveDir[0];
             move[1] += 0.01 * speed * moveDir[1];
-            console.log(`Theta: [${theta[0]}, ${theta[1]}, ${theta[2]}]`);
-            console.log(`Move: [${move[0]}, ${move[1]}]`);
-            console.log(`Move Direction: [${moveDir[0]}, ${moveDir[1]}]`);
-            console.log(`Boundaries: Left=${-hBoundary}, Right=${hBoundary}, Top=${topBoundary}, Bottom=${bottomBoundary}`);
+            // console.log(`Theta: [${theta[0]}, ${theta[1]}, ${theta[2]}]`);
+            // console.log(`Move: [${move[0]}, ${move[1]}]`);
+            // console.log(`Move Direction: [${moveDir[0]}, ${moveDir[1]}]`);
+            // console.log(`Boundaries: Left=${-hBoundary}, Right=${hBoundary}, Top=${topBoundary}, Bottom=${bottomBoundary}`);
             gl.uniform2fv(transformLoc, move);
+
+            // Super random movement
+            theta[axis] += 2.0 * speed;
+            if (theta[axis] >= 360) {
+                theta[axis] -= 360; // Keep theta within 0-360 degrees
+            }
 
             break;
 
@@ -595,6 +650,7 @@ function animUpdate()
 function disableUI()
 {
     subdivSlider.disabled = true;
+    sizeSlider.disabled = true;
     // iterSlider.disabled = true;
     checkTex1.disabled = true;
     checkTex2.disabled = true;
@@ -609,6 +665,7 @@ function disableUI()
 function enableUI()
 {
     subdivSlider.disabled = false;
+    sizeSlider.disabled = false;
     // iterSlider.disabled = false;
     checkTex1.disabled = false;
     checkTex2.disabled = false;
@@ -794,3 +851,34 @@ function hexToRgb(hex) {
     const b = bigint & 255;
     return { r, g, b };
 }
+
+// Function to generate a random color (RGBA)
+function getRandomColor() {
+    return vec4(Math.random(), Math.random(), Math.random(), 1.0);
+}
+
+// Function to change the colors of the gasket randomly
+function changeGasketColors() {
+    // Reset the colors array with random colors for each vertex
+    colors = [];
+    for (let i = 0; i < points.length; i++) {
+        colors.push(getRandomColor());
+    }
+
+    // Update the color buffer with new random colors
+    gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+    console.log("Gasket colors updated");
+}
+
+
+// Function to get a random rotation axis (0, 1, or 2)
+function getRandomAxis() {
+    // Ensure a new random axis is chosen different from the current axis
+    let newAxis;
+    do {
+        newAxis = Math.floor(Math.random() * 3);
+    } while (newAxis === axis);
+    return newAxis;
+}
+
