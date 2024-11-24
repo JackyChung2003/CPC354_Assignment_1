@@ -33,9 +33,9 @@ var firstTime = true; // Initialize as true, assuming "first time" rendering
 // var topBoundary = 0.52; // Top vertical boundary
 // var bottomBoundary = -0.76; // Bottom vertical boundary
 
-var hBoundary = 1.9; // Horizontal boundary
+var hBoundary = 1.87; // Horizontal boundary
 var topBoundary = 0.73125; // Top vertical boundary
-var bottomBoundary = -1; // Bottom vertical boundary
+var bottomBoundary = -0.89; // Bottom vertical boundary
 
 
 var speed = 1; // Default speed of the animation
@@ -153,7 +153,21 @@ function getUIElement()
     bgColor = document.getElementById("bg-color");
 
     bgColor.addEventListener("input", function() {
-        canvas.style.backgroundColor = bgColor.value;
+        // canvas.style.backgroundColor = bgColor.value;
+        const rgb = hexToRgb(bgColor.value);
+        gl.clearColor(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1.0);
+        // animUpdate();
+        // render(); // Re-render to see the background change
+
+        // Clear the color buffer only (not depth), without resetting the state of the animation
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        
+        // Use the current modelViewMatrix and other parameters to render the current state of the animation
+        gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+        gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
+        
+        // Draw the primitive / geometric shape using the current state
+        gl.drawArrays(gl.TRIANGLES, 0, points.length);
     }
     );
 
@@ -407,34 +421,43 @@ function recalcBoundary() {
     // bottomBoundary = -1 + (0.4 * (sizeValue - 1.5)); // Bottom boundary shifts upwards as scale increases
 
     // Calculate hBoundary
-    hBoundary = 2.5 * (1 / sizeValue) - 0.6;
+    // hBoundary = 2.5 * (1 / sizeValue) - 0.6;
+
+    // // Calculate topBoundary
+    // topBoundary = 1.5 * (1 / sizeValue) - 0.75;
+
+    // // Calculate bottomBoundary
+    // bottomBoundary = -1.7 * (1 / sizeValue) + 0.7;
+
+    // Calculate hBoundary
+    hBoundary = 2.68 * (1 / sizeValue) - 0.81;
 
     // Calculate topBoundary
-    topBoundary = 1.5 * (1 / sizeValue) - 0.75;
+    topBoundary = 1.4625 * (1 / sizeValue) - 0.73125;
 
     // Calculate bottomBoundary
-    bottomBoundary = -1.7 * (1 / sizeValue) + 0.7;
+    bottomBoundary = -1.52 * (1 / sizeValue) + 0.63;
 
     // Debugging output to verify calculations
     console.log("Scale:", sizeValue);
     console.log("Horizontal Boundary (hBoundary):", hBoundary);
     console.log("Top Boundary:", topBoundary);
     console.log("Bottom Boundary:", bottomBoundary);
+
+    // while sizeValue = 1.0
+    // var hBoundary = 1.87;
+    // var topBoundary = 0.73125; 
+    // var bottomBoundary = -0.89;
     
     // when sizeValue = 0.5
-    // hBoundary = 4.6;
-    // topBoundary = 2.3;
+    // hBoundary = 4.55;
+    // topBoundary = 2.25;
     // bottomBoundary = -2.4;
 
     // when sizeValue = 2.0
-    // hBoundary = 0.65;
+    // hBoundary = 0.53;
     // topBoundary = 0.0;
-    // bottomBoundary = -0.15;
-    // Debugging output to check boundary values
-    // console.log("Scale:", sizeValue);
-    // console.log("Horizontal Boundary (hBoundary):", hBoundary);
-    // console.log("Top Boundary:", topBoundary);
-    // console.log("Bottom Boundary:", bottomBoundary);
+    // bottomBoundary = -0.13;
 }
 
 // Update the animation frame
@@ -706,6 +729,8 @@ function startAnimation() {
     //     resetValue();
     //     animUpdate();
     // }
+
+    // Start animation
     if (animFlag) {
         console.log("Animation started");
         disableUI();
@@ -760,4 +785,12 @@ function resetSettings() {
     scaleSlider.value = 1.5;
     bgColor.value = "#ffffff";
     resetGasket();
+}
+
+function hexToRgb(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return { r, g, b };
 }

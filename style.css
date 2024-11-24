@@ -13,6 +13,12 @@ body {
 .canvas {
   border: 10px solid #4a4e69;
   border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
 }
 
 .horizontal-align {
