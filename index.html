@@ -87,6 +87,10 @@
 
     <!-- Control Panel -->
     <div class="control-panel">
+      <div class="param-panel">
+        <label for="wall-hit-count">Wall Hit Count:</label>
+        <p id="wall-hit-count">0</p>
+      </div>
       <!-- Subdivision Slider -->
       <div class="param-panel">
         <div class="slider">
@@ -184,6 +188,59 @@
       <div class="param-panel">
         <label for="bg-color">Background Color:</label>
         <input type="color" id="bg-color" value="#ffffff" />
+      </div>
+
+      <!-- Color and Opacity Controls -->
+      <div class="param-panel">
+        <label>Face Colors:</label>
+        <div>
+          Face 1 Color:
+          <input type="color" id="face1-color" value="#ff3333" /> Opacity:
+          <input
+            type="range"
+            id="face1-opacity"
+            min="0"
+            max="1"
+            step="0.1"
+            value="1"
+          />
+        </div>
+        <div>
+          Face 2 Color:
+          <input type="color" id="face2-color" value="#33ff33" /> Opacity:
+          <input
+            type="range"
+            id="face2-opacity"
+            min="0"
+            max="1"
+            step="0.1"
+            value="1"
+          />
+        </div>
+        <div>
+          Face 3 Color:
+          <input type="color" id="face3-color" value="#3333ff" /> Opacity:
+          <input
+            type="range"
+            id="face3-opacity"
+            min="0"
+            max="1"
+            step="0.1"
+            value="1"
+          />
+        </div>
+        <div>
+          Face 4 Color:
+          <input type="color" id="face4-color" value="#000000" /> Opacity:
+          <input
+            type="range"
+            id="face4-opacity"
+            min="0"
+            max="1"
+            step="0.1"
+            value="1"
+          />
+        </div>
       </div>
 
       <!-- Radio buttons for for textures -->

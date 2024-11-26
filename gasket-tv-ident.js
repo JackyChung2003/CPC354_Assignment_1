@@ -32,6 +32,9 @@ var subdivNum = 3, scaleNum = 1.0, enlargeScale = 1.5;
 
 var firstTime = true; // Initialize as true, assuming "first time" rendering
 
+var wallHitCountDisplay; // Declare a variable for the wall hit count display
+
+
 // var time = 0; // Initialize time variable
 // var lastFrameTime = 0; // To keep track of the previous frame time
 
@@ -71,6 +74,13 @@ var baseColors = [
     vec4(0.0, 0.9, 1.0, 1.0),
     vec4(0.2, 0.2, 0.5, 1.0),
     vec4(0.0, 0.0, 0.0, 1.0)
+];
+
+var faceColors = [
+    vec4(1.0, 0.2, 0.4, 1.0), // Default Face 1 color
+    vec4(0.0, 0.9, 1.0, 1.0), // Default Face 2 color
+    vec4(0.2, 0.2, 0.5, 1.0), // Default Face 3 color
+    vec4(0.0, 0.0, 0.0, 1.0)  // Default Face 4 color
 ];
 
 // Define texture coordinates for texture mapping onto a shape or surface
@@ -140,7 +150,8 @@ function getUIElement()
         });
     });
 
-    
+    // Display for the number of times the gasket hits the wall
+    wallHitCountDisplay = document.getElementById("wall-hit-count");
 
     // Sliders and their text values
     subdivSlider = document.getElementById("subdiv-slider");
@@ -176,6 +187,28 @@ function getUIElement()
         gl.drawArrays(gl.TRIANGLES, 0, points.length);
     }
     );
+
+    // Face Colors and Opacity
+    face1Color = document.getElementById("face1-color");
+    face1Opacity = document.getElementById("face1-opacity");
+    face2Color = document.getElementById("face2-color");
+    face2Opacity = document.getElementById("face2-opacity");
+    face3Color = document.getElementById("face3-color");
+    face3Opacity = document.getElementById("face3-opacity");
+    face4Color = document.getElementById("face4-color");
+    face4Opacity = document.getElementById("face4-opacity");
+
+    face1Color.addEventListener("input", () => updateFaceColor(0, face1Color.value, face1Opacity.value));
+    face1Opacity.addEventListener("input", () => updateFaceColor(0, face1Color.value, face1Opacity.value));
+
+    face2Color.addEventListener("input", () => updateFaceColor(1, face2Color.value, face2Opacity.value));
+    face2Opacity.addEventListener("input", () => updateFaceColor(1, face2Color.value, face2Opacity.value));
+
+    face3Color.addEventListener("input", () => updateFaceColor(2, face3Color.value, face3Opacity.value));
+    face3Opacity.addEventListener("input", () => updateFaceColor(2, face3Color.value, face3Opacity.value));
+
+    face4Color.addEventListener("input", () => updateFaceColor(3, face4Color.value, face4Opacity.value));
+    face4Opacity.addEventListener("input", () => updateFaceColor(3, face4Color.value, face4Opacity.value));
 
     // Toggles
     toggleWallColor = document.getElementById("toggle-wall-color");
@@ -570,6 +603,7 @@ function animUpdate()
                 // Reverse horizontal movement direction
                 moveDir[0] *= -1; // Reverse horizontal direction
                 boundaryHitCount++; // Increment boundary hit count
+                wallHitCountDisplay.textContent = boundaryHitCount; // Update the wall hit count display
                 console.log(`Boundary Hit Count: ${boundaryHitCount}`);
 
                 // Check if "Hit Wall & Random Axis" is checked
@@ -589,6 +623,7 @@ function animUpdate()
                 // move[1] = Math.sign(move[1]) * (move[1] > 0 ? topBoundary : bottomBoundary);
                 moveDir[1] *= -1; // Reverse vertical direction
                 boundaryHitCount++; // Increment boundary hit count
+                wallHitCountDisplay.textContent = boundaryHitCount; // Update the wall hit count display
                 console.log(`Boundary Hit Count: ${boundaryHitCount}`);
 
                 // Check if "Hit Wall & Random Axis" is checked
@@ -614,10 +649,10 @@ function animUpdate()
             gl.uniform2fv(transformLoc, move);
 
             // Super random movement
-            theta[axis] += 2.0 * speed;
-            if (theta[axis] >= 360) {
-                theta[axis] -= 360; // Keep theta within 0-360 degrees
-            }
+            // theta[axis] += 2.0 * speed;
+            // if (theta[axis] >= 360) {
+            //     theta[axis] -= 360; // Keep theta within 0-360 degrees
+            // }
 
             break;
 
@@ -722,18 +757,32 @@ function configureTexture(tex)
 /*-----------------------------------------------------------------------------------*/
 
 // Form a triangle
-function triangle(a, b, c, color)
-{
-    colors.push(baseColors[color]);
+// function triangle(a, b, c, color)
+// {
+//     colors.push(baseColors[color]);
+//     points.push(a);
+//     textures.push(texCoord[0]);
+//     colors.push(baseColors[color]);
+//     points.push(b);
+//     textures.push(texCoord[1]);
+//     colors.push(baseColors[color]);
+//     points.push(c);
+//     textures.push(texCoord[2]);
+// }
+function triangle(a, b, c, colorIndex) {
+    colors.push(faceColors[colorIndex]); // Use updated face color
     points.push(a);
     textures.push(texCoord[0]);
-    colors.push(baseColors[color]);
+
+    colors.push(faceColors[colorIndex]);
     points.push(b);
     textures.push(texCoord[1]);
-    colors.push(baseColors[color]);
+
+    colors.push(faceColors[colorIndex]);
     points.push(c);
     textures.push(texCoord[2]);
 }
+
 
 // Form a tetrahedron with different color for each side
 function tetra(a, b, c, d)
@@ -828,6 +877,8 @@ function resetGasket() {
     theta = [0, 0, 0];
     move = [0, 0, 0];
     scaleNum = 1.0;
+    boundaryHitCount = 0; // Reset wall hit count
+    wallHitCountDisplay.textContent = boundaryHitCount;
     firstTime = true; // Indicate first-time rendering
     render();
 }
@@ -841,6 +892,8 @@ function resetSettings() {
     sizeSlider.value = 1.0;
     scaleSlider.value = 1.5;
     bgColor.value = "#ffffff";
+    boundaryHitCount = 0; // Reset wall hit count
+    wallHitCountDisplay.textContent = boundaryHitCount;
     resetGasket();
 }
 
@@ -871,6 +924,20 @@ function changeGasketColors() {
     console.log("Gasket colors updated");
 }
 
+function updateFaceColor(faceIndex, colorHex, opacity) {
+    const rgb = hexToRgb(colorHex); // Convert hex color to RGB
+    faceColors[faceIndex] = vec4(rgb.r / 255, rgb.g / 255, rgb.b / 255, parseFloat(opacity));
+
+    // Update the colors for the specific face
+    colors = []; // Reset colors
+    divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum);
+
+    // Update the color buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+
+    render(); // Re-render the scene with updated colors
+}
 
 // Function to get a random rotation axis (0, 1, or 2)
 function getRandomAxis() {
