@@ -653,7 +653,7 @@ function animUpdate()
                 axis = getRandomAxis(); // Get a new random rotation axis
                 console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
 
-                // changeGasketColors();
+                changeGasketColors();
             }
 
             if (move[1] >= topBoundary || move[1] < bottomBoundary) {
@@ -679,7 +679,7 @@ function animUpdate()
                 axis = getRandomAxis(); // Get a new random rotation axis
                 console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
 
-                // changeGasketColors();
+                changeGasketColors();
             }
             // move[0] += moveDir[0] * 0.01;
             // move[1] += moveDir[1] * 0.01;
@@ -949,24 +949,87 @@ function hexToRgb(hex) {
     return { r, g, b };
 }
 
-// Function to generate a random color (RGBA)
-function getRandomColor() {
-    return vec4(Math.random(), Math.random(), Math.random(), 1.0);
+function rgbToHex(vec4Color) {
+    const r = Math.round(vec4Color[0] * 255);
+    const g = Math.round(vec4Color[1] * 255);
+    const b = Math.round(vec4Color[2] * 255);
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
+
+
+// // Function to generate a random color (RGBA)
+// function getRandomColor() {
+//     return vec4(Math.random(), Math.random(), Math.random(), 1.0);
+// }
 
 // Function to change the colors of the gasket randomly
-function changeGasketColors() {
-    // Reset the colors array with random colors for each vertex
-    colors = [];
-    for (let i = 0; i < points.length; i++) {
-        colors.push(getRandomColor());
-    }
+// function changeGasketColors() {
+//     // Reset the colors array with random colors for each vertex
+//     colors = [];
+//     for (let i = 0; i < points.length; i++) {
+//         colors.push(getRandomColor());
+//     }
 
-    // Update the color buffer with new random colors
+//     // Update the color buffer with new random colors
+//     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
+//     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+//     console.log("Gasket colors updated");
+// }
+
+// function changeGasketColors() {
+//     // Generate random colors for the four faces
+//     faceColors = [
+//         vec4(Math.random(), Math.random(), Math.random(), 1.0), // Random color for Face 1
+//         vec4(Math.random(), Math.random(), Math.random(), 1.0), // Random color for Face 2
+//         vec4(Math.random(), Math.random(), Math.random(), 1.0), // Random color for Face 3
+//         vec4(Math.random(), Math.random(), Math.random(), 1.0)  // Random color for Face 4
+//     ];
+
+//     // Update the colors for all faces
+//     colors = []; // Reset the colors array
+//     divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum); // Recompute the geometry with new colors
+
+//     // Update the color buffer
+//     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
+//     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+
+//     console.log("Random colors applied to gasket faces:", faceColors);
+// }
+
+function changeGasketColors() {
+    // Get the current opacity values from the sliders
+    const opacityValues = [
+        parseFloat(face1Opacity.value),
+        parseFloat(face2Opacity.value),
+        parseFloat(face3Opacity.value),
+        parseFloat(face4Opacity.value),
+    ];
+
+    // Generate random colors for each face with the corresponding opacity
+    faceColors = [
+        vec4(Math.random(), Math.random(), Math.random(), opacityValues[0]), // Random color for Face 1
+        vec4(Math.random(), Math.random(), Math.random(), opacityValues[1]), // Random color for Face 2
+        vec4(Math.random(), Math.random(), Math.random(), opacityValues[2]), // Random color for Face 3
+        vec4(Math.random(), Math.random(), Math.random(), opacityValues[3]), // Random color for Face 4
+    ];
+
+    // Update the colors for all faces
+    colors = []; // Reset the colors array
+    divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum); // Recompute the geometry with new colors
+
+    // Update the color buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
-    console.log("Gasket colors updated");
+
+    console.log("Random colors with opacity applied to gasket faces:", faceColors);
+
+    face1Color.value = rgbToHex(faceColors[0]);
+    face2Color.value = rgbToHex(faceColors[1]);
+    face3Color.value = rgbToHex(faceColors[2]);
+    face4Color.value = rgbToHex(faceColors[3]);
 }
+
+
 
 function updateFaceColor(faceIndex, colorHex, opacity) {
     const rgb = hexToRgb(colorHex); // Convert hex color to RGB
