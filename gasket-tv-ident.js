@@ -296,11 +296,18 @@ function getUIElement()
     // );
 
     // Speed Slider
-    speedSlider.onchange = function(event)
-    {
-        speed = event.target.value;
-        speedValue.innerHTML = speed;
-    };
+    // speedSlider.onchange = function(event)
+    // {
+    //     speed = event.target.value;
+    //     speedValue.innerHTML = speed;
+    // };
+    
+    // Speed Slider
+    speedSlider.addEventListener("input", function(event) {
+        speed = event.target.value; // Update the speed variable
+        speedValue.innerHTML = speed; // Update the speed display
+    });
+    
 
     // iterSlider.onchange = function(event) 
 	// {
@@ -932,11 +939,22 @@ function updateFaceColor(faceIndex, colorHex, opacity) {
     colors = []; // Reset colors
     divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum);
 
+    // Update the colors array for the specific face
+    // for (let i = faceIndex * 3; i < (faceIndex + 1) * 3; i++) {
+    //     colors[i] = faceColors[faceIndex]; // Update the colors of the face
+    // }
+
     // Update the color buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
 
-    render(); // Re-render the scene with updated colors
+    // render(); // Re-render the scene with updated colors
+
+    // Re-render the scene without recomputing transformations
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
+    gl.drawArrays(gl.TRIANGLES, 0, points.length);
 }
 
 // Function to get a random rotation axis (0, 1, or 2)
