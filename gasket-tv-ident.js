@@ -34,6 +34,8 @@ var firstTime = true; // Initialize as true, assuming "first time" rendering
 
 var wallHitCountDisplay; // Declare a variable for the wall hit count display
 
+let soundEnabled = false; // Sound disabled by default
+
 
 // var time = 0; // Initialize time variable
 // var lastFrameTime = 0; // To keep track of the previous frame time
@@ -152,6 +154,13 @@ function getUIElement()
 
     // Display for the number of times the gasket hits the wall
     wallHitCountDisplay = document.getElementById("wall-hit-count");
+
+    document.getElementById("toggle-sound-btn").addEventListener("click", function () {
+        soundEnabled = !soundEnabled; // Toggle the sound state
+    
+        // Update the button text based on the sound state
+        this.textContent = soundEnabled ? "Mute Sound" : "Unmute Sound";
+    });
 
     // Sliders and their text values
     subdivSlider = document.getElementById("subdiv-slider");
@@ -543,6 +552,8 @@ function animUpdate()
     // Clear the color buffer and the depth buffer before rendering a new frame
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    const hitSound = document.getElementById("hit-sound");
+
     // Set the model view matrix for vertex transformation
     // Use translation to readjust the position of the primitive (if needed)
     console.log(`Size Value: ${sizeValue}`);
@@ -621,6 +632,12 @@ function animUpdate()
                 //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
                 // }
 
+                // Play sound on hit if sound is enabled
+                if (soundEnabled) {
+                    hitSound.currentTime = 0; // Reset the sound to the start
+                    hitSound.play();
+                }
+
                 axis = getRandomAxis(); // Get a new random rotation axis
                 console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
 
@@ -640,6 +657,12 @@ function animUpdate()
                 //     axis = getRandomAxis();
                 //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
                 // }
+
+                // Play sound on hit if sound is enabled
+                if (soundEnabled) {
+                    hitSound.currentTime = 0; // Reset the sound to the start
+                    hitSound.play();
+                }
 
                 axis = getRandomAxis(); // Get a new random rotation axis
                 console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
