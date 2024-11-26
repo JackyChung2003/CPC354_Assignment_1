@@ -45,13 +45,31 @@
     <!-- Fragment Shader Section-->
     <script id="fragment-shader" type="x-shader/x-fragment">
       precision mediump float;
-      varying vec4 fColor;
+
+      varying vec4 fColor;  // Receive the color from the vertex shader and interpolate color with alpha
       varying vec2 fTexCoord;
       uniform sampler2D texture;
 
       void main()
       {
-      	gl_FragColor = fColor * texture2D(texture, fTexCoord);
+        // Sample texture color
+        vec4 texColor = texture2D(texture, fTexCoord);
+        vec4 blendedColor = fColor * texColor; // Multiply face color with texture color
+
+        // If the alpha of the face is 0 (fully transparent), discard the fragment
+        if (blendedColor.a == 0.0) {
+            discard;
+        }
+
+        // Apply transparency by multiplying color and alpha
+      	// gl_FragColor = fColor * texture2D(texture, fTexCoord);
+        // gl_FragColor = vec4(fColor.rgb * texColor.rgb, fColor.a * texColor.a);
+
+        // Blend the fragment's color with the background and back face
+        //gl_FragColor = vec4(fColor.rgb * texColor.rgb, alpha);
+
+        // Output the blended color
+        gl_FragColor = blendedColor;
       }
     </script>
   </head>

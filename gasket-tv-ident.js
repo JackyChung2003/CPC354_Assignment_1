@@ -384,10 +384,12 @@ function configWebGL()
 
     // Set the viewport and clear the color
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);  // Initial background color: white
 
     // Enable hidden-surface removal
-    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.DEPTH_TEST);   // Using the depth buffer to perform hidden surface removal
+    gl.enable(gl.BLEND); // Use blending to render transparent objects
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // Configure blending mode
 
     // Compile the vertex and fragment shaders and link to WebGL
     program = initShaders(gl, "vertex-shader", "fragment-shader");
