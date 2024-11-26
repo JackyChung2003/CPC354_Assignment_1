@@ -113,6 +113,42 @@
       <div class="param-panel">
         <button id="toggle-sound-btn">Unmute Sound</button>
 
+        <!-- Audio Options -->
+        <div class="param-panel">
+          <label>Choose Wall Hit Sound:</label>
+          <div>
+            <input
+              type="radio"
+              id="sound-kiu"
+              name="wall-hit-sound"
+              value="kiu-sound-single.mp3"
+              checked
+            />
+            <label for="sound-kiu">Kiu Sound</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="sound-bounce"
+              name="wall-hit-sound"
+              value="bouncing-sound-single.mp3"
+            />
+            <label for="sound-bounce">Bouncing Sound</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="sound-punch"
+              name="wall-hit-sound"
+              value="punch-sound-single.mp3"
+            />
+            <label for="sound-punch">Punch Sound</label>
+          </div>
+        </div>
+
+        <!-- Existing Audio Element -->
+        <audio id="hit-sound" src="kiu-sound-single.mp3" preload="auto"></audio>
+
         <div class="slider">
           Number of Subdivisions:
           <br />1<input
@@ -207,7 +243,7 @@
       <!-- Background Color Picker -->
       <div class="param-panel">
         <label for="bg-color">Background Color:</label>
-        <input type="color" id="bg-color" value="#ffffff" />
+        <input type="color" id="bg-color" value="#ffeb99" />
       </div>
 
       <!-- Color and Opacity Controls -->
@@ -251,7 +287,7 @@
         </div>
         <div>
           Face 4 Color:
-          <input type="color" id="face4-color" value="#000000" /> Opacity:
+          <input type="color" id="face4-color" value="#ffffff" /> Opacity:
           <input
             type="range"
             id="face4-opacity"
@@ -323,4 +359,4 @@
 
 <!-- <audio id="hit-sound" src="bouncing-sound-single.mp3" preload="auto"></audio> -->
 <!-- <audio id="hit-sound" src="punch-sound-single.mp3" preload="auto"></audio> -->
-<audio id="hit-sound" src="kiu-sound-single.mp3" preload="auto"></audio>
+<!-- <audio id="hit-sound" src="kiu-sound-single.mp3" preload="auto"></audio> -->

@@ -82,7 +82,7 @@ var faceColors = [
     vec4(1.0, 0.2, 0.4, 1.0), // Default Face 1 color
     vec4(0.0, 0.9, 1.0, 1.0), // Default Face 2 color
     vec4(0.2, 0.2, 0.5, 1.0), // Default Face 3 color
-    vec4(0.0, 0.0, 0.0, 1.0)  // Default Face 4 color
+    vec4(1.0, 1.0, 1.0, 1.0)  // Default Face 4 color
 ];
 
 // Define texture coordinates for texture mapping onto a shape or surface
@@ -154,6 +154,17 @@ function getUIElement()
 
     // Display for the number of times the gasket hits the wall
     wallHitCountDisplay = document.getElementById("wall-hit-count");
+
+    const audioElement = document.getElementById("hit-sound");
+    const soundRadios = document.querySelectorAll('input[name="wall-hit-sound"]');
+
+    soundRadios.forEach((radio) => {
+        radio.addEventListener("change", (event) => {
+          const selectedSound = event.target.value;
+          audioElement.src = selectedSound; // Update the audio source
+          console.log(`Wall Hit Sound set to: ${selectedSound}`);
+        });
+      });
 
     document.getElementById("toggle-sound-btn").addEventListener("click", function () {
         soundEnabled = !soundEnabled; // Toggle the sound state
@@ -393,7 +404,8 @@ function configWebGL()
 
     // Set the viewport and clear the color
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);  // Initial background color: white
+    // gl.clearColor(1.0, 1.0, 1.0, 1.0);  // Initial background color: white
+    gl.clearColor(1.0, 0.9216, 0.6, 1.0)
 
     // Enable hidden-surface removal
     gl.enable(gl.DEPTH_TEST);   // Using the depth buffer to perform hidden surface removal
@@ -992,3 +1004,9 @@ function getRandomAxis() {
     return newAxis;
 }
 
+function playWallHitSound() {
+    if (soundEnabled) {
+      audioElement.currentTime = 0; // Reset to the start of the audio
+      audioElement.play(); // Play the sound
+    }
+  }
