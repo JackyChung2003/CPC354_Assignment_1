@@ -1,26 +1,132 @@
+/* Global Styles */
 body {
   width: 100vw;
   height: 100vh;
-  padding: 0;
   margin: 0;
-  text-decoration: none;
+  padding: 0;
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  font-family: "Arial", sans-serif;
+  background-color: #0f172a; /* Dark background for contrast */
+  color: #ffffff;
 }
 
+/* Canvas Section */
 .canvas {
-  border: 10px solid #4a4e69;
-  border-radius: 10px;
-  margin: 0;
-  padding: 0;
+  border: 8px solid #1e293b; /* Softer border for modern look */
+  border-radius: 12px;
+  padding: 10px;
+  background-color: #334155; /* Darker panel background */
   display: flex;
   justify-content: center;
   align-items: center;
-  /* height: 100vh; */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
+/* Control Panel */
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  padding: 20px;
+  width: 320px;
+  background-color: #1e293b;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Section Headers */
+.param-panel label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: inline-block;
+  font-size: 0.95rem;
+  color: #cbd5e1;
+}
+
+/* Panel Elements */
+.param-panel {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.param-panel .slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.param-panel input[type="range"] {
+  width: 100%;
+  margin: 5px 0;
+}
+
+.param-panel input[type="color"] {
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.param-panel input[type="radio"],
+.param-panel input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.param-panel .textbox {
+  background: #334155;
+  border: 2px solid #4a5568;
+  color: #e2e8f0;
+  border-radius: 6px;
+  padding: 5px 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  width: 70px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+/* Buttons */
+.button-panel button {
+  margin: 10px 0;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(90deg, #1e40af, #2563eb);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button-panel button:hover {
+  background: linear-gradient(90deg, #2563eb, #1e40af);
+  transform: translateY(-2px);
+}
+
+.button-panel button:active {
+  transform: translateY(2px);
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.button-panel button:disabled {
+  cursor: not-allowed;
+  background: #64748b;
+  opacity: 0.6;
+}
+
+/* Alignment Helpers */
 .horizontal-align {
   display: flex;
   flex-direction: row;
@@ -35,149 +141,31 @@ body {
   justify-content: center;
 }
 
-.panel {
-  margin-left: 10px;
-  width: 400px;
-  height: 720px;
-  border: 10px solid #4a4e69;
-  border-radius: 10px;
-  background-color: #022639;
-}
-
-.param-panel {
-  width: 270px;
-  margin: 5px 0 5px 0;
-}
-
-.mg-top-bottom {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.slider {
-  margin-top: 5px;
+/* Wall Hit Count */
+#wall-hit-count {
+  font-size: 1.5rem;
   font-weight: bold;
-  font-size: large;
-  color: #ffffff;
-}
-
-.slider .slide {
-  width: 120px;
-  padding-top: 10px;
-}
-
-.checkText {
-  width: 150px;
-  height: 20px;
-  font-weight: bold;
-  font-size: large;
-  color: #ffffff;
-}
-
-.checkRadio {
-  width: 20px;
-  height: 20px;
-  margin-right: 22px;
-}
-
-.textbox {
-  margin-left: 15px;
-  width: 60px;
-  height: 60px;
-  background: #0077b6;
-  border: 5px solid #00b4d8;
-  border-radius: 10px;
-}
-
-.textbox p {
-  position: relative;
-  color: #ffffff;
+  color: #38bdf8;
   text-align: center;
-  font-weight: bold;
-  font-size: 27px;
-  line-height: 0.25;
+  background-color: #1e293b;
+  border: 2px solid #334155;
+  border-radius: 6px;
+  padding: 5px;
+  width: 70px;
+  margin: 10px auto;
 }
 
-#start-btn {
-  margin: 15px 0px 5px 0px;
-  width: 270px;
-  height: 70px;
-  background: #34a0a4;
-  border: 5px solid #99d98c;
-  border-radius: 10px;
-  color: #ffffff;
-  text-align: center;
-  font-weight: bold;
-  font-size: 27px;
-  outline: none;
-}
-
-#start-btn:hover {
-  animation: bounce 1s;
-}
-
-#start-btn:active {
-  background-color: #21ff94;
-  box-shadow: 0 2px #666666;
-  transform: translateY(2px);
-}
-
-#start-btn:disabled {
-  animation: none;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-@keyframes bounce {
-  0%,
-  20%,
-  60%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  80% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translate(0px, 0px);
-  }
-  20% {
-    transform: translate(-10px, 0px);
-  }
-  40% {
-    transform: translate(10px, 0px);
-  }
-  60% {
-    transform: translate(-10px, 0px);
-  }
-  80% {
-    transform: translate(10px, 0px);
-  }
-}
-
-/* Class to apply the shake effect */
-.shake {
-  animation: shake 0.5s ease-in-out;
-}
-
-/* Common vibration keyframes */
+/* Shake Animations */
 @keyframes shake-left-right {
   0%,
   100% {
     transform: translateX(0);
   }
   25% {
-    transform: translateX(-10px);
+    transform: translateX(-8px);
   }
   75% {
-    transform: translateX(10px);
+    transform: translateX(8px);
   }
 }
 
@@ -187,18 +175,57 @@ body {
     transform: translateY(0);
   }
   25% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
   75% {
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
 }
 
-/* Classes to trigger vibration */
 .shake-left-right {
   animation: shake-left-right 0.5s ease-in-out;
 }
 
 .shake-up-down {
   animation: shake-up-down 0.5s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .control-panel {
+    width: 90%;
+  }
+
+  .canvas {
+    width: 90%;
+    height: auto;
+  }
+
+  .button-panel button {
+    font-size: 0.9rem;
+  }
+}
+
+.button-panel button {
+  margin: 10px 0;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(90deg, #1e40af, #2563eb);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button-panel button:hover {
+  background: linear-gradient(90deg, #2563eb, #1e40af);
+  transform: translateY(-2px);
+}
+
+.button-panel button:active {
+  transform: translateY(2px);
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.4);
 }

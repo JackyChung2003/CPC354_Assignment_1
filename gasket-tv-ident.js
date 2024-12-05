@@ -241,6 +241,10 @@ function getUIElement()
     // Checkboxes
     // toggleHitWallRandomAxis = document.getElementById("toggle-hit-wall-random-axis");
 
+    
+    saveBtn = document.getElementById("save-settings-btn")
+    loadBtn = document.getElementById("load-settings-btn")
+
     // Buttons
     startAnimationBtn = document.getElementById("start-animation-btn");
     resetGasketBtn = document.getElementById("reset-gasket-btn");
@@ -408,6 +412,68 @@ function getUIElement()
             console.log("Wall Vibration disabled");
         }
     });
+
+    saveBtn.addEventListener("click", function () {
+        const settings = {
+            subdivision: subdivSlider.value,
+            size: sizeSlider.value,
+            speed: speedSlider.value,
+            bgColor: bgColor.value,
+            faceColors: {
+                face1: { color: face1Color.value, opacity: face1Opacity.value },
+                face2: { color: face2Color.value, opacity: face2Opacity.value },
+                face3: { color: face3Color.value, opacity: face3Opacity.value },
+                face4: { color: face4Color.value, opacity: face4Opacity.value }
+            },
+            randomColor: toggleWallColor.checked,
+            randomMovement: toggleWallRandomMovement.checked,
+            vibration: toggleWallVibrate.checked,
+            // Add new properties to save
+            wallHitCount: boundaryHitCount,
+            position: {
+                x: move[0],
+                y: move[1]
+            },
+            rotation: {
+                x: theta[0],
+                y: theta[1],
+                z: theta[2]
+            },
+            scale: scaleNum,
+            animationSequence: animSeq,
+            movementDirection: {
+                x: moveDir[0],
+                y: moveDir[1]
+            }
+        };
+    
+        const blob = new Blob([JSON.stringify(settings, null, 2)], { type: "text/plain" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "settings.txt";
+        a.click();
+        URL.revokeObjectURL(a.href); // Clean up the URL
+    });
+    
+    // Load button click event
+    loadBtn.addEventListener("click", function () {
+        const fileInput = document.getElementById("file-input");
+        fileInput.click();
+    
+        fileInput.onchange = function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const settings = JSON.parse(e.target.result);
+                    applySettings(settings);
+                };
+                reader.readAsText(file);
+            }
+        };
+        
+    });
+    
 
     // Animation Start Button
     startAnimationBtn.onclick = startAnimation;
@@ -1154,3 +1220,80 @@ function vibratePage(direction) {
         body.classList.remove('shake-left-right', 'shake-up-down');
     }, 500);
 }
+
+// Apply settings function
+function applySettings(settings) {
+    // Apply settings to the UI elements
+    subdivSlider.value = settings.subdivision;
+    sizeSlider.value = settings.size;
+    speedSlider.value = settings.speed;
+    bgColor.value = settings.bgColor;
+
+    // Apply face colors and opacities
+    face1Color.value = settings.faceColors.face1.color;
+    face1Opacity.value = settings.faceColors.face1.opacity;
+    face2Color.value = settings.faceColors.face2.color;
+    face2Opacity.value = settings.faceColors.face2.opacity;
+    face3Color.value = settings.faceColors.face3.color;
+    face3Opacity.value = settings.faceColors.face3.opacity;
+    face4Color.value = settings.faceColors.face4.color;
+    face4Opacity.value = settings.faceColors.face4.opacity;
+
+    // Apply toggles
+    toggleWallColor.checked = settings.randomColor;
+    toggleWallRandomMovement.checked = settings.randomMovement;
+    toggleWallVibrate.checked = settings.vibration;
+
+    // Apply wall hit count
+    boundaryHitCount = settings.wallHitCount;
+    wallHitCountDisplay.textContent = boundaryHitCount;
+
+    // Apply position
+    move[0] = settings.position.x;
+    move[1] = settings.position.y;
+
+    // Apply rotation
+    theta[0] = settings.rotation.x;
+    theta[1] = settings.rotation.y;
+    theta[2] = settings.rotation.z;
+
+    // Apply scale
+    scaleNum = settings.scale;
+
+    // Apply animation sequence
+    animSeq = settings.animationSequence;
+
+    // Apply movement direction
+    moveDir[0] = settings.movementDirection.x;
+    moveDir[1] = settings.movementDirection.y;
+
+    // Update the UI with the loaded settings
+    subdivValue.innerHTML = settings.subdivision;
+    sizeValue.innerHTML = settings.size;
+    speedValue.innerHTML = settings.speed;
+
+    // Recompute the geometry
+    recompute();
+
+    // Render a single frame
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Update the model view matrix with the loaded settings
+    modelViewMatrix = mat4();
+    modelViewMatrix = mult(modelViewMatrix, scale(scaleNum, scaleNum, scaleNum));
+    modelViewMatrix = mult(modelViewMatrix, translate(move[0], move[1], 0));
+    modelViewMatrix = mult(modelViewMatrix, rotateX(theta[0]));
+    modelViewMatrix = mult(modelViewMatrix, rotateY(theta[1]));
+    modelViewMatrix = mult(modelViewMatrix, rotateZ(theta[2]));
+
+    // Update uniforms
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
+    gl.uniform2fv(transformLoc, move);
+
+    // Draw the geometry
+    gl.drawArrays(gl.TRIANGLES, 0, points.length);
+
+    console.log("Settings applied and rendered:", settings);
+}
+
