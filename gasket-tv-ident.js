@@ -36,6 +36,7 @@ var wallHitCountDisplay; // Declare a variable for the wall hit count display
 
 let soundEnabled = false; // Sound disabled by default
 
+var toggleRandomColor;
 
 // var time = 0; // Initialize time variable
 // var lastFrameTime = 0; // To keep track of the previous frame time
@@ -157,6 +158,8 @@ function getUIElement()
 
     const audioElement = document.getElementById("hit-sound");
     const soundRadios = document.querySelectorAll('input[name="wall-hit-sound"]');
+
+    toggleRandomColor = document.getElementById("toggle-wall-color");
 
     soundRadios.forEach((radio) => {
         radio.addEventListener("change", (event) => {
@@ -652,8 +655,10 @@ function animUpdate()
 
                 axis = getRandomAxis(); // Get a new random rotation axis
                 console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
-
-                changeGasketColors();
+                
+                if (toggleRandomColor && toggleRandomColor.checked) {
+                    changeGasketColors();
+                }
             }
 
             if (move[1] >= topBoundary || move[1] < bottomBoundary) {
@@ -679,7 +684,9 @@ function animUpdate()
                 axis = getRandomAxis(); // Get a new random rotation axis
                 console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
 
-                changeGasketColors();
+                if (toggleRandomColor && toggleRandomColor.checked) {
+                    changeGasketColors();
+                }
             }
             // move[0] += moveDir[0] * 0.01;
             // move[1] += moveDir[1] * 0.01;
@@ -1028,8 +1035,6 @@ function changeGasketColors() {
     face3Color.value = rgbToHex(faceColors[2]);
     face4Color.value = rgbToHex(faceColors[3]);
 }
-
-
 
 function updateFaceColor(faceIndex, colorHex, opacity) {
     const rgb = hexToRgb(colorHex); // Convert hex color to RGB
