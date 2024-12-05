@@ -169,12 +169,20 @@ function getUIElement()
         });
       });
 
-    document.getElementById("toggle-sound-btn").addEventListener("click", function () {
-        soundEnabled = !soundEnabled; // Toggle the sound state
+    // document.getElementById("toggle-sound-btn").addEventListener("click", function () {
+    //     soundEnabled = !soundEnabled; // Toggle the sound state
     
-        // Update the button text based on the sound state
-        this.textContent = soundEnabled ? "Mute Sound" : "Unmute Sound";
+    //     // Update the button text based on the sound state
+    //     this.textContent = soundEnabled ? "Mute Sound" : "Unmute Sound";
+    // });
+
+    const soundToggleInput = document.getElementById("sound-toggle-input");
+
+    // Event Listener for Toggle
+    soundToggleInput.addEventListener("change", () => {
+        soundEnabled = !soundEnabled; // Toggle the sound state
     });
+
 
     // Sliders and their text values
     subdivSlider = document.getElementById("subdiv-slider");
