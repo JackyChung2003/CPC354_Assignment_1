@@ -76,32 +76,242 @@
   </head>
 
   <body>
-    <!-- Canvas for the graphic rendering -->
-    <div class="canvas">
-      <canvas id="gl-canvas" width="1280" height="720">
-        Error: your browser doesn't support the HTML5 canvas element
-      </canvas>
-      <img
-        id="texture-1"
-        src="https://i.postimg.cc/kMKrJd9B/BG001.jpg"
-        alt="texture 1"
-        crossorigin="anonymous"
-        hidden
-      />
-      <img
-        id="texture-2"
-        src="https://i.postimg.cc/vHgnmCxf/bricks.jpg"
-        alt="texture 2"
-        crossorigin="anonymous"
-        hidden
-      />
-      <img
-        id="texture-3"
-        src="https://i.postimg.cc/jdfgPn0g/dot-dot-pic.png"
-        alt="texture 3"
-        crossorigin="anonymous"
-        hidden
-      />
+    <div class="whole-tv">
+      <div class="antenna-container"></div>
+      <div class="television-container">
+        <div class="television-inner">
+          <div class="television-screen-container">
+            <div class="television-crt">
+              <div class="television-screen">
+                <!-- WebGL Canvas -->
+                <canvas id="gl-canvas" width="640" height="360">
+                  Error: your browser doesn't support the HTML5 canvas element
+                </canvas>
+                <img
+                  id="texture-1"
+                  src="https://i.postimg.cc/kMKrJd9B/BG001.jpg"
+                  alt="texture 1"
+                  crossorigin="anonymous"
+                  hidden
+                />
+                <img
+                  id="texture-2"
+                  src="https://i.postimg.cc/vHgnmCxf/bricks.jpg"
+                  alt="texture 2"
+                  crossorigin="anonymous"
+                  hidden
+                />
+                <img
+                  id="texture-3"
+                  src="https://i.postimg.cc/jdfgPn0g/dot-dot-pic.png"
+                  alt="texture 3"
+                  crossorigin="anonymous"
+                  hidden
+                />
+              </div>
+            </div>
+          </div>
+          <div class="television-lateral">
+            <label for="wall-hit-count">Wall Hit Count:</label>
+            <p id="wall-hit-count">0</p>
+            <button id="toggle-sound-btn">Unmute Sound</button>
+            <div>
+              <input
+                type="radio"
+                id="sound-kiu"
+                name="wall-hit-sound"
+                value="kiu-sound-single.mp3"
+                checked
+              />
+              <label for="sound-kiu">Kiu Sound</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="sound-bounce"
+                name="wall-hit-sound"
+                value="bouncing-sound-single.mp3"
+              />
+              <label for="sound-bounce">Bouncing Sound</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="sound-punch"
+                name="wall-hit-sound"
+                value="punch-sound-single.mp3"
+              />
+              <label for="sound-punch">Punch Sound</label>
+            </div>
+
+            <!-- Existing Audio Element -->
+            <audio
+              id="hit-sound"
+              src="kiu-sound-single.mp3"
+              preload="auto"
+            ></audio>
+
+            <div class="slider">
+              Number of Subdivisions:
+              <br />1<input
+                id="subdiv-slider"
+                type="range"
+                min="1"
+                max="5"
+                value="3"
+              />5
+            </div>
+            <div class="textbox">
+              <p id="subdiv-value">3</p>
+            </div>
+
+            <label>Rotation Axis:</label>
+            <div>
+              <input type="radio" id="rotateX" name="rotation-axis" value="x" />
+              <label for="rotateX">X</label>
+              <input type="radio" id="rotateY" name="rotation-axis" value="y" />
+              <label for="rotateY">Y</label>
+              <input
+                type="radio"
+                id="rotateZ"
+                name="rotation-axis"
+                value="z"
+                checked
+              />
+              <label for="rotateZ">Z</label>
+            </div>
+
+            <label for="size-slider">Initial Size:</label>
+            <div class="slider">
+              Initial Size:
+              <br />0.5<input
+                id="size-slider"
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value="1.0"
+              />2
+            </div>
+            <div class="textbox">
+              <p id="size-value">1.0</p>
+            </div>
+
+            <!-- Speed Slider -->
+            <label for="speed-slider">Speed:</label>
+            <input id="speed-slider" type="range" min="1" max="10" value="1" />
+            <span id="speed-value">1</span>x
+
+            <!-- Background Color Picker -->
+            <label for="bg-color">Background Color:</label>
+            <input type="color" id="bg-color" value="#ffeb99" />
+
+            <!-- Color and Opacity Controls -->
+            <label>Face Colors:</label>
+            <div>
+              Face 1 Color:
+              <input type="color" id="face1-color" value="#ff3333" /> Opacity:
+              <input
+                type="range"
+                id="face1-opacity"
+                min="0"
+                max="1"
+                step="0.1"
+                value="1"
+              />
+            </div>
+            <div>
+              Face 2 Color:
+              <input type="color" id="face2-color" value="#33ff33" /> Opacity:
+              <input
+                type="range"
+                id="face2-opacity"
+                min="0"
+                max="1"
+                step="0.1"
+                value="1"
+              />
+            </div>
+            <div>
+              Face 3 Color:
+              <input type="color" id="face3-color" value="#3333ff" /> Opacity:
+              <input
+                type="range"
+                id="face3-opacity"
+                min="0"
+                max="1"
+                step="0.1"
+                value="1"
+              />
+            </div>
+            <div>
+              Face 4 Color:
+              <input type="color" id="face4-color" value="#ffffff" /> Opacity:
+              <input
+                type="range"
+                id="face4-opacity"
+                min="0"
+                max="1"
+                step="0.1"
+                value="1"
+              />
+            </div>
+
+            <!-- Radio buttons for for textures -->
+            <div class="checkText">Enable Texture 1</div>
+            <input
+              class="checkRadio"
+              id="check-texture-1"
+              type="radio"
+              name="radio"
+              checked
+            />
+
+            <div class="checkText">Enable Texture 2</div>
+            <input
+              class="checkRadio"
+              id="check-texture-2"
+              type="radio"
+              name="radio"
+            />
+
+            <div class="checkText">Enable Texture 3</div>
+            <input
+              class="checkRadio"
+              id="check-texture-3"
+              type="radio"
+              name="radio"
+            />
+
+            <!-- Toggles -->
+            <div>
+              <input type="checkbox" id="toggle-wall-color" />
+              <label for="toggle-wall-color">Hit Wall & Random Color</label>
+            </div>
+            <div>
+              <input type="checkbox" id="toggle-wall-random-movement" />
+              <label for="toggle-wall-random-movement"
+                >Hit Wall & Random Movement</label
+              >
+            </div>
+            <div>
+              <input type="checkbox" id="toggle-wall-vibrate" />
+              <label for="toggle-wall-vibrate">Hit Wall & Vibration</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button id="power-button">Power</button>
+          <button id="save-settings-btn">Save Settings</button>
+          <button id="load-settings-btn">Load Settings</button>
+          <button id="start-animation-btn">Start</button>
+          <button id="reset-gasket-btn">Reset Gasket</button>
+          <button id="reset-settings-btn">Reset All Settings</button>
+
+          <input type="file" id="file-input" style="display: none" />
+        </div>
+      </div>
     </div>
 
     <!-- Control Panel -->

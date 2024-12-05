@@ -5,7 +5,6 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   font-family: "Arial", sans-serif;
@@ -13,86 +12,57 @@ body {
   color: #ffffff;
 }
 
-/* Canvas Section */
-.canvas {
-  border: 8px solid #1e293b; /* Softer border for modern look */
-  border-radius: 12px;
+/* TV Case and Screen */
+.television-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #333; /* Dark gray TV border */
+  border-radius: 15px;
   padding: 10px;
-  background-color: #334155; /* Darker panel background */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.television-inner {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  background: #444; /* Lighter inner border */
+  border-radius: 10px;
+  width: 700px;
+  height: 420px;
 }
 
-/* Control Panel */
-.control-panel {
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-  padding: 20px;
-  width: 320px;
-  background-color: #1e293b;
-  border-radius: 12px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-/* Section Headers */
-.param-panel label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: inline-block;
-  font-size: 0.95rem;
-  color: #cbd5e1;
-}
-
-/* Panel Elements */
-.param-panel {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.param-panel .slider {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.param-panel input[type="range"] {
-  width: 100%;
-  margin: 5px 0;
-}
-
-.param-panel input[type="color"] {
-  border: none;
-  border-radius: 4px;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-
-.param-panel input[type="radio"],
-.param-panel input[type="checkbox"] {
-  margin-right: 10px;
-  cursor: pointer;
-}
-
-.param-panel .textbox {
-  background: #334155;
-  border: 2px solid #4a5568;
-  color: #e2e8f0;
-  border-radius: 6px;
-  padding: 5px 10px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.2rem;
-  width: 70px;
-  height: 40px;
+.television-screen-container {
+  width: 680px;
+  height: 400px;
+  border-radius: 15px;
+  background: #000; /* Black for CRT border */
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
+}
+
+.television-crt {
+  width: 660px;
+  height: 380px;
+  border-radius: 15px;
+  background: radial-gradient(#333, #111); /* CRT gradient effect */
+  box-shadow: inset 0 0 10px #000; /* Inner shadow for CRT */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.television-screen {
+  width: 640px;
+  height: 360px;
+  background: #000; /* Black screen */
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Buttons */
@@ -126,22 +96,27 @@ body {
   opacity: 0.6;
 }
 
-/* Alignment Helpers */
-.horizontal-align {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+/* Input Controls */
+input[type="range"] {
+  width: 100%;
+  margin: 5px 0;
 }
 
-.vertical-align {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+input[type="color"] {
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 
-/* Wall Hit Count */
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* Display Panels */
 #wall-hit-count {
   font-size: 1.5rem;
   font-weight: bold;
@@ -155,77 +130,18 @@ body {
   margin: 10px auto;
 }
 
-/* Shake Animations */
-@keyframes shake-left-right {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-8px);
-  }
-  75% {
-    transform: translateX(8px);
-  }
-}
-
-@keyframes shake-up-down {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-8px);
-  }
-  75% {
-    transform: translateY(8px);
-  }
-}
-
-.shake-left-right {
-  animation: shake-left-right 0.5s ease-in-out;
-}
-
-.shake-up-down {
-  animation: shake-up-down 0.5s ease-in-out;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
-  .control-panel {
+  .television-container {
     width: 90%;
+    padding: 10px;
   }
 
-  .canvas {
+  .television-inner {
     width: 90%;
-    height: auto;
   }
 
   .button-panel button {
     font-size: 0.9rem;
   }
-}
-
-.button-panel button {
-  margin: 10px 0;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #ffffff;
-  background: linear-gradient(90deg, #1e40af, #2563eb);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.button-panel button:hover {
-  background: linear-gradient(90deg, #2563eb, #1e40af);
-  transform: translateY(-2px);
-}
-
-.button-panel button:active {
-  transform: translateY(2px);
-  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.4);
 }

@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom, #eee, #ccc);
+}
+
+.tv-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tv-frame {
+  position: relative;
+  width: 700px;
+  height: 500px;
+  background: #333;
+  border: 10px solid #555;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tv-screen {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 600px;
+  height: 350px;
+  background: #000;
+  border: 5px solid #222;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.tv-knobs {
+  position: absolute;
+  top: 420px;
+  left: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.knob {
+  width: 30px;
+  height: 30px;
+  background: #444;
+  border: 2px solid #666;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.tv-stand {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  width: 100px;
+  height: 50px;
+  background: #555;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+}
+
+.stand-leg {
+  width: 20px;
+  height: 50px;
+  background: #444;
+}
+
+.stand-leg.left {
+  border-top-left-radius: 5px;
+}
+
+.stand-leg.right {
+  border-top-right-radius: 5px;
+}
