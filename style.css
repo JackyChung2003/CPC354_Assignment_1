@@ -142,3 +142,63 @@ body {
     transform: translateY(-5px);
   }
 }
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate(0px, 0px);
+  }
+  20% {
+    transform: translate(-10px, 0px);
+  }
+  40% {
+    transform: translate(10px, 0px);
+  }
+  60% {
+    transform: translate(-10px, 0px);
+  }
+  80% {
+    transform: translate(10px, 0px);
+  }
+}
+
+/* Class to apply the shake effect */
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Common vibration keyframes */
+@keyframes shake-left-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes shake-up-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  75% {
+    transform: translateY(10px);
+  }
+}
+
+/* Classes to trigger vibration */
+.shake-left-right {
+  animation: shake-left-right 0.5s ease-in-out;
+}
+
+.shake-up-down {
+  animation: shake-up-down 0.5s ease-in-out;
+}

@@ -12,7 +12,7 @@ var modelViewMatrix, projectionMatrix, texture;
 // theta = [x, y, z]
 // var subdivSlider, subdivText,  iterText, startBtn;
 var canvas, subdivSlider, subdivValue, sizeSlider, sizeValue, scaleSlider, scaleValue;
-var bgColor, toggleWallColor, toggleWallAxis, toggleWallVibrate;
+var bgColor, toggleWallColor, toggleWallRandomMovement, toggleWallVibrate;
 var startAnimationBtn, resetGasketBtn, resetSettingsBtn;
 // var subdivSlider, subdivText, iterSlider, iterText, startBtn;
 // var checkTex1, checkTex2, checkTex3, tex1, tex2, tex3;
@@ -24,7 +24,7 @@ var axis = 2; // Default axis for rotation (0: X-axis, 1: Y-axis, 2: Z-axis)
 var boundaryHitCount = 0;
 
 // Checkbox references for random colour, random axis and random vibration
-var toggleWallColor, toggleWallAxis, toggleWallVibrate;
+var toggleWallColor, toggleWallRandomMovement, toggleWallVibrate;
 
 // var subdivNum = 3, iterNum = 1, scaleNum = 1;
 
@@ -235,7 +235,7 @@ function getUIElement()
 
     // Toggles
     toggleWallColor = document.getElementById("toggle-wall-color");
-    toggleWallAxis = document.getElementById("toggle-wall-axis");
+    toggleWallRandomMovement = document.getElementById("toggle-wall-random-movement");
     toggleWallVibrate = document.getElementById("toggle-wall-vibrate");
 
     // Checkboxes
@@ -383,6 +383,31 @@ function getUIElement()
     //     resetValue();
     //     animUpdate();
 	// };
+
+    toggleWallRandomMovement.addEventListener("change", function () {
+        if (toggleWallRandomMovement.checked) {
+            console.log("Random Rotation Movement enabled");
+        } else {
+            console.log("Random Rotation Movement disabled");
+        }
+    });
+
+    // // Variable to track vibration state
+    // let isVibrationEnabled = false;
+    
+    // // Add event listener to track checkbox changes
+    // toggleWallVibrate.addEventListener("change", function () {
+    //     isVibrationEnabled = this.checked; // Update the state
+    //     console.log(`Vibration is now ${isVibrationEnabled ? "enabled" : "disabled"}`);
+    // });
+
+    toggleWallVibrate.addEventListener("change", function () {
+        if (toggleWallVibrate.checked) {
+            console.log("Wall Vibration enabled");
+        } else {
+            console.log("Wall Vibration disabled");
+        }
+    });
 
     // Animation Start Button
     startAnimationBtn.onclick = startAnimation;
@@ -642,7 +667,7 @@ function animUpdate()
                 console.log(`Boundary Hit Count: ${boundaryHitCount}`);
 
                 // Check if "Hit Wall & Random Axis" is checked
-                // if (toggleWallAxis && toggleWallAxis.checked) {
+                // if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
                 //     axis = getRandomAxis();
                 //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
                 // }
@@ -659,6 +684,10 @@ function animUpdate()
                 if (toggleRandomColor && toggleRandomColor.checked) {
                     changeGasketColors();
                 }
+                
+                if (toggleWallVibrate && toggleWallVibrate.checked) {
+                    vibratePage('left-right'); // Vibrate left-right for horizontal wall hit
+                }
             }
 
             if (move[1] >= topBoundary || move[1] < bottomBoundary) {
@@ -670,7 +699,7 @@ function animUpdate()
                 console.log(`Boundary Hit Count: ${boundaryHitCount}`);
 
                 // Check if "Hit Wall & Random Axis" is checked
-                // if (toggleWallAxis && toggleWallAxis.checked) {
+                // if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
                 //     axis = getRandomAxis();
                 //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
                 // }
@@ -687,6 +716,10 @@ function animUpdate()
                 if (toggleRandomColor && toggleRandomColor.checked) {
                     changeGasketColors();
                 }
+
+                if (toggleWallVibrate && toggleWallVibrate.checked) {
+                    vibratePage('up-down'); // Vibrate up-down for vertical wall hit
+                }
             }
             // move[0] += moveDir[0] * 0.01;
             // move[1] += moveDir[1] * 0.01;
@@ -699,11 +732,20 @@ function animUpdate()
             // console.log(`Boundaries: Left=${-hBoundary}, Right=${hBoundary}, Top=${topBoundary}, Bottom=${bottomBoundary}`);
             gl.uniform2fv(transformLoc, move);
 
-            // Super random movement
             // theta[axis] += 2.0 * speed;
             // if (theta[axis] >= 360) {
-            //     theta[axis] -= 360; // Keep theta within 0-360 degrees
-            // }
+                //     theta[axis] -= 360; // Keep theta within 0-360 degrees
+                // }
+                
+            // Super random movement
+            if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
+                // Super random movement logic
+                theta[axis] += 2.0 * speed; // Rotate randomly
+                if (theta[axis] >= 360) {
+                    theta[axis] -= 360; // Keep theta within 0-360 degrees
+                }
+                console.log(`Random Rotation: Axis=${axis}, Theta=${theta[axis]}`);
+            }
 
             break;
 
@@ -1078,3 +1120,37 @@ function playWallHitSound() {
       audioElement.play(); // Play the sound
     }
   }
+
+// function vibratePage() {
+
+//     // if (!isVibrationEnabled) return; // Do nothing if vibration is disabled
+
+//     const body = document.body;
+    
+//     // Add the 'shake' class to start the vibration effect
+//     body.classList.add('shake');
+    
+//     // Remove the 'shake' class after the animation ends (500ms in this case)
+//     setTimeout(() => {
+//         body.classList.remove('shake');
+//     }, 500);
+// }
+
+function vibratePage(direction) {
+    const body = document.body;
+
+    // Remove any existing shake classes to avoid conflicts
+    body.classList.remove('shake-left-right', 'shake-up-down');
+
+    // Add the appropriate shake class based on direction
+    if (direction === 'left-right') {
+        body.classList.add('shake-left-right');
+    } else if (direction === 'up-down') {
+        body.classList.add('shake-up-down');
+    }
+
+    // Remove the class after the animation ends (500ms in this case)
+    setTimeout(() => {
+        body.classList.remove('shake-left-right', 'shake-up-down');
+    }, 500);
+}
