@@ -25,7 +25,7 @@ body {
   /* background-color: #ccc */
   border-radius: 10px;
   position: relative;
-  margin: 50px auto;
+  margin: 30px auto;
 }
 
 /* Antenna Left */
@@ -140,6 +140,53 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@keyframes turned-off {
+  0% {
+    border-width: 19.65vw;
+    border-left-width: 35.1vw;
+    border-right-width: 35.1vw;
+    background: #111111; /* Off state - black screen */
+    opacity: 0;
+  }
+  100% {
+    border-width: 19.65vw;
+    border-left-width: 35.1vw;
+    border-right-width: 35.1vw;
+    background: #111111;
+    opacity: 1; /* Fade out */
+  }
+}
+
+@keyframes turned-on {
+  0% {
+    border-width: 19.65vw;
+    border-left-width: 35.1vw;
+    border-right-width: 35.1vw;
+    background: #111111;
+    opacity: 1; /* Fade in */
+  }
+  100% {
+    border-width: 0; /* Screen fills fully */
+    border-left-width: 0;
+    border-right-width: 0;
+    background: transparent; /* Screen on - transparent for WebGL canvas */
+    opacity: 0;
+  }
+}
+
+.canvas-overlay {
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  width: 640px;
+  height: 360px;
+  z-index: 1; /* Lower z-index to place it below UI elements but above the canvas */
+  background: #111111; /* Default off state */
+  pointer-events: none; /* Ensure it doesn’t block interaction with other elements */
+  opacity: 1; /* Fully visible initially */
+  transition: all 0.5s ease-in-out; /* Smooth transition */
 }
 
 .television-lateral {
@@ -760,27 +807,49 @@ button {
   background-image: linear-gradient(to bottom, #333 0%, #444 80%, #555 100%);
   border-radius: 30px;
   border: 1px solid #222;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease; /* Smooth transition for shadow and scaling */
   font-family: "Source Sans Pro", sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #eee;
   text-shadow: 0 1px #000;
   margin: 10px;
-}
 
-button:hover {
+  /* Initial shadow (elevated state) */
   box-shadow: 0 2px 2px #000, 0 4px 6px #111, inset 0 0 2px #222;
 }
 
-button:active {
-  box-shadow: 0 4px 3px 1px #000, 0 6px 8px #111, 0 -4px 4px #222,
-    0 -6px 4px #333, inset 0 0 5px 3px #000, inset 0 0 30px #111;
+/* Hover state: Remove shadow */
+button:hover {
+  box-shadow: none;
+  transform: scale(0.98); /* Slight shrink effect */
 }
 
+/* Active state: Shrink and remove shadow */
+button:active {
+  box-shadow: none;
+  transform: scale(0.95); /* Shrink slightly more */
+}
+
+/* Focus state: Remove focus outline */
 button:focus {
-  outline: none; /* Remove the default focus outline */
-  box-shadow: none; /* Ensure no box-shadow persists */
+  outline: none;
+}
+
+/* Animation to pop back */
+@keyframes pop-back {
+  0% {
+    box-shadow: none;
+    transform: scale(0.95); /* Slightly shrunken */
+  }
+  100% {
+    box-shadow: 0 2px 2px #000, 0 4px 6px #111, inset 0 0 2px #222; /* Initial shadow */
+    transform: scale(1); /* Back to original size */
+  }
+}
+
+button.pop-back {
+  animation: pop-back 0.2s ease-in-out forwards; /* 0.2s pop-back animation */
 }
 
 /* Button Container Styling */
@@ -795,6 +864,69 @@ button:focus {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 100%;
+}
+/* Hide the default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.container {
+  display: inline-block; /* Inline-block to ensure proper spacing */
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Custom Checkmark Styled as a Button */
+.checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px; /* Match button size */
+  height: 50px;
+  background-image: linear-gradient(to bottom, #333 0%, #444 80%, #555 100%);
+  border-radius: 30px;
+  border: 1px solid #222;
+  transition: all 0.2s ease;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #eee;
+  text-shadow: 0 1px #000;
+  box-shadow: 6px 6px 10px #000000, -6px -6px 10px #3c3c3c;
+}
+
+.checkmark svg {
+  width: 30px; /* Maintain consistent size */
+  height: 30px;
+  fill: #264d39;
+  transition: 0.2s ease;
+}
+
+.checkmark:hover {
+  box-shadow: 0 2px 2px #000, 0 4px 6px #111, inset 0 0 2px #222;
+}
+
+.checkmark:active {
+  box-shadow: 0 4px 3px 1px #000, 0 6px 8px #111, 0 -4px 4px #222,
+    0 -6px 4px #333, inset 0 0 5px 3px #000, inset 0 0 30px #111;
+}
+
+/* When the checkbox is checked */
+.container input:checked ~ .checkmark {
+  box-shadow: 4px 4px 6px #000000, -4px -4px 6px #3c3c3c;
+}
+
+.container input:checked ~ .checkmark svg {
+  fill: #00ff7b; /* Animation for checked state */
+}
+
+.container input:checked ~ .checkmark:active {
+  box-shadow: 2px 2px 3px #000000, -2px -2px 3px #3c3c3c;
 }
 
 @keyframes shake {

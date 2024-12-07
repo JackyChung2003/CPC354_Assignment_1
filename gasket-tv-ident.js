@@ -269,6 +269,68 @@ function getUIElement()
     resetGasketBtn = document.getElementById("reset-gasket-btn");
     resetSettingsBtn = document.getElementById("reset-settings-btn");
 
+    // const overlay = document.getElementById("canvas-overlay");
+    // const powerButton = document.getElementById("power-button");
+    
+    // // Track whether the canvas is "on" or "off"
+    // let isPoweredOn = false;
+    
+    // powerButton.addEventListener("click", () => {
+    //   if (isPoweredOn) {
+    //     // Turn off
+    //     overlay.style.animation = "none"; // Reset animation
+    //     overlay.offsetHeight; // Trigger reflow to reset animation
+    //     overlay.style.animation = "turned-off 0.5s forwards";
+    //     isPoweredOn = false;
+    //   } else {
+    //     // Turn on
+    //     overlay.style.animation = "none"; // Reset animation
+    //     overlay.offsetHeight; // Trigger reflow to reset animation
+    //     overlay.style.animation = "turned-on 0.5s forwards";
+    //     isPoweredOn = true;
+    //   }
+    // });
+
+    const powerToggle = document.getElementById("power-toggle");
+    const overlay = document.getElementById("canvas-overlay");
+    const buttons = document.querySelectorAll(".bottom-buttons-section button");
+    
+    // Initialize the default state
+    let isPoweredOn = false;
+    
+    powerToggle.addEventListener("change", () => {
+        isPoweredOn = powerToggle.checked; // Get the current state of the checkbox
+    
+        buttons.forEach((button) => {
+            button.disabled = !isPoweredOn; // Enable or disable buttons based on TV state
+        });
+    
+        if (powerToggle.checked) {
+            overlay.style.animation = "turned-on 0.5s forwards";
+        } else {
+            overlay.style.animation = "turned-off 0.5s forwards";
+        }
+    });
+
+
+
+
+    // powerButton.addEventListener("click", () => {
+    //     const overlay = document.getElementById("canvas-overlay");
+    //     // if (overlay.style.display === "none" || overlay.style.display === "") {
+    //     //   overlay.style.display = "block"; // Show overlay
+    //     // } else {
+    //     //   overlay.style.display = "none"; // Hide overlay
+    //     // }
+
+    //     // Toggle visibility
+    //     if (overlay.style.display === "block") {
+    //       overlay.style.display = "none"; // Hide overlay (turn "on")
+    //     } else {
+    //       overlay.style.display = "block"; // Show overlay (turn "off")
+    //     }
+    //   });
+
     // Subdivision Slider
     subdivSlider.onchange = function(event) 
 	{
