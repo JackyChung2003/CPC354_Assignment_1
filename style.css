@@ -10,7 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   font-family: "Electrolize", sans-serif;
-  background-color: #0f172a; /* Dark background for contrast */
+  background-color: #0f172a;
   color: #ffffff;
   overflow: hidden;
 }
@@ -21,8 +21,6 @@ body {
   justify-content: center;
   align-items: center;
   width: 300px;
-  /* height: 400px; */
-  /* background-color: #ccc */
   border-radius: 10px;
   position: relative;
   margin: 30px auto;
@@ -58,7 +56,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #333; /* Dark gray TV border */
+  background: #333;
   border-radius: 15px;
   padding: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -70,9 +68,6 @@ body {
   align-items: center;
   background: #444; /* Lighter inner border */
   border-radius: 10px;
-  /* width: 700px;
-  height: 420px; */
-  /* border: 2px solid purple; */
 }
 
 .television-left-section {
@@ -81,7 +76,6 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-  /* border: 1px solid green; */
   margin: 0 10px;
   gap: 10px;
 }
@@ -94,38 +88,33 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid green; */
 }
 
 .tv-radio-section {
-  /* border: 1px solid red; */
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   padding: 10px 0;
   border-radius: 10px;
-  /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 5.4), inset 0 -4px 6px rgba(0, 0, 0, 0.5);
   width: 680px;
-  /* height: 400px; */
   gap: 20px;
 }
 
 .tv-radio-group {
   display: flex;
-  flex-direction: column; /* Stack label and toggle vertically */
+  flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px; /* Space between the label and toggle */
-  /* width: 150px;  */
+  gap: 10px;
 }
 .television-crt {
   width: 660px;
   height: 380px;
   border-radius: 15px;
-  background: radial-gradient(#333, #111); /* CRT gradient effect */
-  box-shadow: inset 0 0 10px #000; /* Inner shadow for CRT */
+  background: radial-gradient(#333, #111);
+  box-shadow: inset 0 0 10px #000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -178,15 +167,13 @@ body {
 
 .canvas-overlay {
   position: absolute;
-  /* top: 0;
-  left: 0; */
   width: 640px;
   height: 360px;
-  z-index: 1; /* Lower z-index to place it below UI elements but above the canvas */
-  background: #111111; /* Default off state */
-  pointer-events: none; /* Ensure it doesn’t block interaction with other elements */
-  opacity: 1; /* Fully visible initially */
-  transition: all 0.5s ease-in-out; /* Smooth transition */
+  z-index: 1;
+  background: #111111;
+  pointer-events: none;
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
 }
 
 .television-lateral {
@@ -197,7 +184,6 @@ body {
   background: #444; /* Lighter inner border */
   border-radius: 10px;
   width: 600px;
-  /* height: 420px; */
   height: 100%;
   gap: 10px;
 }
@@ -236,7 +222,6 @@ body {
 /* Input Controls */
 input[type="range"] {
   width: 100%;
-  /* margin: 5px 0; */
 }
 
 input[type="color"] {
@@ -472,14 +457,10 @@ input[type="checkbox"] {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  /* gap: 20px; */
   padding: 20px;
-  /* background: linear-gradient(145deg, #1a1a1a, #0f0f0f); */
   border-radius: 15px;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 -4px 6px rgba(0, 0, 0, 0.3); */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 7.4), inset 0 -4px 6px rgba(0, 0, 0, 1.3);
   margin-top: 20px;
-  /* max-width: 1000px; */
 }
 
 /* Individual Slider Group */
@@ -490,7 +471,7 @@ input[type="checkbox"] {
   justify-content: flex-end;
   text-align: center;
   gap: 10px;
-  width: 70px; /* Set consistent width for all sliders */
+  width: 70px;
 }
 
 /* Slider Titles */
@@ -517,8 +498,8 @@ input[type="checkbox"] {
   -webkit-appearance: slider-vertical;
   appearance: slider-vertical;
   width: 15px;
-  height: 150px; /* Uniform height for sliders */
-  background: linear-gradient(to bottom, #333, #1a1a1a); /* Darker gradient */
+  height: 150px;
+  background: linear-gradient(to bottom, #333, #1a1a1a);
   border-radius: 10px;
   outline: none;
   padding: 0;
@@ -642,8 +623,8 @@ input[type="checkbox"] {
 .toggle-container {
   display: flex;
   justify-content: flex-start;
-  flex-wrap: wrap; /* Allow wrapping for responsiveness */
-  align-items: center; /* Align items vertically */
+  flex-wrap: wrap;
+  align-items: center;
   margin-top: 20px;
   width: 600px;
 }
@@ -654,8 +635,7 @@ input[type="checkbox"] {
   flex-direction: column; /* Stack label and toggle vertically */
   align-items: center;
   text-align: center;
-  gap: 10px; /* Space between the label and toggle */
-  /* width: 150px;  */
+  gap: 10px;
 }
 
 .toggle-group .label {
@@ -947,10 +927,12 @@ button.pop-back {
     transform: translate(10px, 0px);
   }
 }
+
 /* Class to apply the shake effect */
 .shake {
   animation: shake 0.5s ease-in-out;
 }
+
 /* Common vibration keyframes */
 @keyframes shake-left-right {
   0%,
@@ -964,6 +946,7 @@ button.pop-back {
     transform: translateX(10px);
   }
 }
+
 @keyframes shake-up-down {
   0%,
   100% {
@@ -976,10 +959,12 @@ button.pop-back {
     transform: translateY(10px);
   }
 }
+
 /* Classes to trigger vibration */
 .shake-left-right {
   animation: shake-left-right 0.5s ease-in-out;
 }
+
 .shake-up-down {
   animation: shake-up-down 0.5s ease-in-out;
 }

@@ -9,13 +9,9 @@ var modelViewMatrixLoc, projectionMatrixLoc, texCoordLoc;
 var modelViewMatrix, projectionMatrix, texture;
 
 // Variables referencing HTML elements
-// theta = [x, y, z]
-// var subdivSlider, subdivText,  iterText, startBtn;
 var canvas, subdivSlider, subdivValue, sizeSlider, sizeValue, scaleSlider, scaleValue;
 var bgColor, toggleWallColor, toggleWallRandomMovement, toggleWallVibrate;
 var startAnimationBtn, resetGasketBtn, resetSettingsBtn;
-// var subdivSlider, subdivText, iterSlider, iterText, startBtn;
-// var checkTex1, checkTex2, checkTex3, tex1, tex2, tex3;
 var theta = [0, 0, 0], move = [0, 0, 0];
 
 var axis = 2; // Default axis for rotation (0: X-axis, 1: Y-axis, 2: Z-axis)
@@ -25,8 +21,6 @@ var boundaryHitCount = 0;
 
 // Checkbox references for random colour, random axis and random vibration
 var toggleWallColor, toggleWallRandomMovement, toggleWallVibrate;
-
-// var subdivNum = 3, iterNum = 1, scaleNum = 1;
 
 var subdivNum = 3, scaleNum = 1.0, enlargeScale = 1.5;
 
@@ -38,17 +32,10 @@ let soundEnabled = false; // Sound disabled by default
 
 var toggleRandomColor;
 
-// var time = 0; // Initialize time variable
-// var lastFrameTime = 0; // To keep track of the previous frame time
-
-// var hBoundary = 0.6; // Horizontal boundary
-// var topBoundary = 0.52; // Top vertical boundary
-// var bottomBoundary = -0.76; // Bottom vertical boundary
-
+// Border boundaries for the gasket to bounce off
 var hBoundary = 1.87; // Horizontal boundary
 var topBoundary = 0.73125; // Top vertical boundary
 var bottomBoundary = -0.89; // Bottom vertical boundary
-
 
 var speed = 1; // Default speed of the animation
 var animSeq = 0
@@ -72,13 +59,6 @@ var vertices = [
 ];
 
 // Different colors for a tetrahedron (RGBA)
-var baseColors = [
-    vec4(1.0, 0.2, 0.4, 1.0),
-    vec4(0.0, 0.9, 1.0, 1.0),
-    vec4(0.2, 0.2, 0.5, 1.0),
-    vec4(0.0, 0.0, 0.0, 1.0)
-];
-
 var faceColors = [
     vec4(1.0, 0.2, 0.4, 1.0), // Default Face 1 color
     vec4(0.0, 0.9, 1.0, 1.0), // Default Face 2 color
@@ -116,22 +96,14 @@ window.onload = function init()
 // Retrieve all elements from HTML and store in the corresponding variables
 function getUIElement()
 {
-    
     // Canvas
     canvas = document.getElementById("gl-canvas");
-    // canvas = document.getElementById("gl-canvas");
-    // subdivSlider = document.getElementById("subdiv-slider");
-    // subdivText = document.getElementById("subdiv-text");
-    // // iterSlider = document.getElementById("iter-slider");
-    // iterText = document.getElementById("iter-text");
     checkTex1 = document.getElementById("check-texture-1");
     checkTex2 = document.getElementById("check-texture-2");
     checkTex3 = document.getElementById("check-texture-3");
     tex1 = document.getElementById("texture-1");
 	tex2 = document.getElementById("texture-2");
     tex3 = document.getElementById("texture-3");
-    // startBtn = document.getElementById("start-btn");
-
 
     // Rotation Axis Inputs
     rotationAxisInputs = document.querySelectorAll('input[name="rotation-axis"]');
@@ -172,13 +144,6 @@ function getUIElement()
         });
     });
 
-    // document.getElementById("toggle-sound-btn").addEventListener("click", function () {
-    //     soundEnabled = !soundEnabled; // Toggle the sound state
-    
-    //     // Update the button text based on the sound state
-    //     this.textContent = soundEnabled ? "Mute Sound" : "Unmute Sound";
-    // });
-
     const soundToggleInput = document.getElementById("sound-toggle-input");
 
     // Event Listener for Toggle
@@ -194,9 +159,6 @@ function getUIElement()
     sizeSlider = document.getElementById("size-slider");
     sizeValue = document.getElementById("size-value");
 
-    // scaleSlider = document.getElementById("scale-slider");
-    // scaleValue = document.getElementById("scale-value");
-
     speedSlider = document.getElementById("speed-slider");
     speedValue = document.getElementById("speed-value");
 
@@ -207,8 +169,6 @@ function getUIElement()
         // canvas.style.backgroundColor = bgColor.value;
         const rgb = hexToRgb(bgColor.value);
         gl.clearColor(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1.0);
-        // animUpdate();
-        // render(); // Re-render to see the background change
 
         // Clear the color buffer only (not depth), without resetting the state of the animation
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -256,10 +216,6 @@ function getUIElement()
             console.log("Wall Vibration disabled");
         }
     });
-
-    // Checkboxes
-    // toggleHitWallRandomAxis = document.getElementById("toggle-hit-wall-random-axis");
-
     
     saveBtn = document.getElementById("save-settings-btn")
     loadBtn = document.getElementById("load-settings-btn")
@@ -268,28 +224,6 @@ function getUIElement()
     startAnimationBtn = document.getElementById("start-animation-btn");
     resetGasketBtn = document.getElementById("reset-gasket-btn");
     resetSettingsBtn = document.getElementById("reset-settings-btn");
-
-    // const overlay = document.getElementById("canvas-overlay");
-    // const powerButton = document.getElementById("power-button");
-    
-    // // Track whether the canvas is "on" or "off"
-    // let isPoweredOn = false;
-    
-    // powerButton.addEventListener("click", () => {
-    //   if (isPoweredOn) {
-    //     // Turn off
-    //     overlay.style.animation = "none"; // Reset animation
-    //     overlay.offsetHeight; // Trigger reflow to reset animation
-    //     overlay.style.animation = "turned-off 0.5s forwards";
-    //     isPoweredOn = false;
-    //   } else {
-    //     // Turn on
-    //     overlay.style.animation = "none"; // Reset animation
-    //     overlay.offsetHeight; // Trigger reflow to reset animation
-    //     overlay.style.animation = "turned-on 0.5s forwards";
-    //     isPoweredOn = true;
-    //   }
-    // });
 
     const powerToggle = document.getElementById("power-toggle");
     const overlay = document.getElementById("canvas-overlay");
@@ -309,27 +243,11 @@ function getUIElement()
             overlay.style.animation = "turned-on 0.5s forwards";
         } else {
             overlay.style.animation = "turned-off 0.5s forwards";
+
+            // Call the resetGasket function when powering off
+            resetGasket();
         }
     });
-
-
-
-
-    // powerButton.addEventListener("click", () => {
-    //     const overlay = document.getElementById("canvas-overlay");
-    //     // if (overlay.style.display === "none" || overlay.style.display === "") {
-    //     //   overlay.style.display = "block"; // Show overlay
-    //     // } else {
-    //     //   overlay.style.display = "none"; // Hide overlay
-    //     // }
-
-    //     // Toggle visibility
-    //     if (overlay.style.display === "block") {
-    //       overlay.style.display = "none"; // Hide overlay (turn "on")
-    //     } else {
-    //       overlay.style.display = "block"; // Show overlay (turn "off")
-    //     }
-    //   });
 
     // Subdivision Slider
     subdivSlider.onchange = function(event) 
@@ -339,17 +257,6 @@ function getUIElement()
         // firstTime = false;
         recompute();
     };
-
-    // Initial Size Slider
-    // sizeSlider.onchange = function(event)
-    // {
-    //     sizeNum = event.target.value;
-    //     // sizeValue.innerHTML = sizeNum;
-    //     sizeValue.innerHTML = sizeSlider.value;
-    //     firstTime = false;
-    //     // recompute();
-    // }
-
 
     sizeSlider.addEventListener("input", function() {
         console.log("This is addEventListener");
@@ -365,64 +272,12 @@ function getUIElement()
         
     }
     );
-
-    // sizeSlider.onchange = function(event)
-    // {
-    //     sizeNum = event.target.value;
-    //     sizeValue.innerHTML = sizeNum;
-    //     recalcBoundary();
-    //     render();
-    // }
-
-
-    // Enlargement Scale Slider
-    // scaleSlider.onchange = function(event)
-    // {
-    //     scaleNum = event.target.value;
-    //     scaleValue.innerHTML = scaleNum;
-    //     enlargeScale = scaleNum;
-    //     recalcBoundary();
-    //     render();
-    // };
-
-    // scaleSlider.addEventListener("input", function() {
-    //     scaleValue = parseFloat(scaleSlider.value);
-    //     firstTime = false;
-    //     document.getElementById("scale-value").innerHTML = scaleValue;
-    //     // recalcBoundary();
-    //     // recompute();
-    //     // Update the scaling for the gasket without recomputing the geometry
-    //     modelViewMatrix = mat4();
-    //     modelViewMatrix = mult(modelViewMatrix, scale(scaleValue, scaleValue, scaleValue));
-    //     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-        
-    //     // Clear and redraw the scene with the updated modelViewMatrix
-    //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    //     gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
-    //     gl.drawArrays(gl.TRIANGLES, 0, points.length);
-    // }
-    // );
-
-    // Speed Slider
-    // speedSlider.onchange = function(event)
-    // {
-    //     speed = event.target.value;
-    //     speedValue.innerHTML = speed;
-    // };
     
     // Speed Slider
     speedSlider.addEventListener("input", function(event) {
         speed = event.target.value; // Update the speed variable
         speedValue.innerHTML = speed; // Update the speed display
     });
-    
-
-    // iterSlider.onchange = function(event) 
-	// {
-	// 	iterNum = event.target.value;
-	// 	iterText.innerHTML = iterNum;
-    //     recompute();
-    // };
     
     // Background Color Picker
     bgColor.onchange = function(event)
@@ -461,32 +316,15 @@ function getUIElement()
         }
     };
 
-    // startBtn.onclick = function()
-	// {
-	// 	animFlag = true;
-    //     disableUI();
-    //     resetValue();
-    //     animUpdate();
-	// };
-
     toggleWallRandomMovement.addEventListener("change", function () {
         if (toggleWallRandomMovement.checked) {
             console.log("Random Rotation Movement enabled");
+            
         } else {
             console.log("Random Rotation Movement disabled");
-            // resetGasket(); // Run resetGasket when unchecked
             resetGasketPosition();
         }
     });
-
-    // // Variable to track vibration state
-    // let isVibrationEnabled = false;
-    
-    // // Add event listener to track checkbox changes
-    // toggleWallVibrate.addEventListener("change", function () {
-    //     isVibrationEnabled = this.checked; // Update the state
-    //     console.log(`Vibration is now ${isVibrationEnabled ? "enabled" : "disabled"}`);
-    // });
 
     toggleWallVibrate.addEventListener("change", function () {
         if (toggleWallVibrate.checked) {
@@ -556,7 +394,6 @@ function getUIElement()
         };
         
     });
-    
 
     // Animation Start Button
     startAnimationBtn.onclick = startAnimation;
@@ -626,7 +463,6 @@ function configWebGL()
     projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
     texCoordLoc = gl.getUniformLocation(program, "texture");
 
-    
     transformLoc = gl.getUniformLocation(program, "transform");
 }
 
@@ -721,16 +557,6 @@ function recalcBoundary() {
 // Update the animation frame
 function animUpdate()
 {
-    // Stop the animation frame and return upon completing all sequences
-    // if(iterTemp == iterNum)
-    // {
-    //     window.cancelAnimationFrame(animFrame);
-    //     enableUI();
-    //     animFlag = false;
-    //     return; // break the self-repeating loop
-    // }
-
-
     if (!animFlag) return; // Stop if animation is toggled off
 
     // Clear the color buffer and the depth buffer before rendering a new frame
@@ -807,12 +633,6 @@ function animUpdate()
                 wallHitCountDisplay.textContent = boundaryHitCount; // Update the wall hit count display
                 console.log(`Boundary Hit Count: ${boundaryHitCount}`);
 
-                // Check if "Hit Wall & Random Axis" is checked
-                // if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
-                //     axis = getRandomAxis();
-                //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
-                // }
-
                 // Play sound on hit if sound is enabled
                 if (soundEnabled) {
                     hitSound.currentTime = 0; // Reset the sound to the start
@@ -833,17 +653,10 @@ function animUpdate()
 
             if (move[1] >= topBoundary || move[1] < bottomBoundary) {
                 // Reverse vertical movement direction
-                // move[1] = Math.sign(move[1]) * (move[1] > 0 ? topBoundary : bottomBoundary);
                 moveDir[1] *= -1; // Reverse vertical direction
                 boundaryHitCount++; // Increment boundary hit count
                 wallHitCountDisplay.textContent = boundaryHitCount; // Update the wall hit count display
                 console.log(`Boundary Hit Count: ${boundaryHitCount}`);
-
-                // Check if "Hit Wall & Random Axis" is checked
-                // if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
-                //     axis = getRandomAxis();
-                //     console.log(`New Rotation Axis: ${axis === 0 ? 'X' : axis === 1 ? 'Y' : 'Z'}`);
-                // }
 
                 // Play sound on hit if sound is enabled
                 if (soundEnabled) {
@@ -862,8 +675,7 @@ function animUpdate()
                     vibratePage('up-down'); // Vibrate up-down for vertical wall hit
                 }
             }
-            // move[0] += moveDir[0] * 0.01;
-            // move[1] += moveDir[1] * 0.01;
+            
             // Update position based on direction and speed
             move[0] += 0.01 * speed * moveDir[0];
             move[1] += 0.01 * speed * moveDir[1];
@@ -872,21 +684,6 @@ function animUpdate()
             // console.log(`Move Direction: [${moveDir[0]}, ${moveDir[1]}]`);
             // console.log(`Boundaries: Left=${-hBoundary}, Right=${hBoundary}, Top=${topBoundary}, Bottom=${bottomBoundary}`);
             gl.uniform2fv(transformLoc, move);
-
-            // theta[axis] += 2.0 * speed;
-            // if (theta[axis] >= 360) {
-                //     theta[axis] -= 360; // Keep theta within 0-360 degrees
-                // }
-                
-            // // Super random movement
-            // if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
-            //     // Super random movement logic
-            //     theta[axis] += 2.0 * speed; // Rotate randomly
-            //     if (theta[axis] >= 360) {
-            //         theta[axis] -= 360; // Keep theta within 0-360 degrees
-            //     }
-            //     console.log(`Random Rotation: Axis=${axis}, Theta=${theta[axis]}`);
-            // }
             
             // Super random movement
             let initialState = {
@@ -914,23 +711,9 @@ function animUpdate()
                 console.log(`Random Rotation: Axis=${axis}, Theta=${theta[axis]}`);
             } else {
                 if (randomMovementEnabled) {
-                    // Reset state only once when disabling
-                    // console.log("Random movement disabled. Resetting values.");
-                    // theta = [0, 0, 0];
-                    // move = [0, 0, 0];
-                    // firstTime = true; // Indicate first-time rendering
-                    // randomMovementEnabled = false; // Update the flag
-
-                    
-                    // render(); // Re-render the scene
-
                     resetGasket(); // Reset the gasket to its original position
                 }
-                // Normal behavior continues without interference
             }
-
-
-
             break;
 
         default: // Reset animation sequence
@@ -938,10 +721,7 @@ function animUpdate()
             break;
     }
 
-    // Perform vertex transformation
-    // modelViewMatrix = mult(modelViewMatrix, rotateZ(theta[2]));
-    // modelViewMatrix = mult(modelViewMatrix, scale(scaleNum, scaleNum, 1));
-    // modelViewMatrix = mult(modelViewMatrix, translate(move[0], move[1], move[2]));
+    // Perform vertex transformation for the gasket
     modelViewMatrix = mult(modelViewMatrix, rotateX(theta[0])); // Rotate along X-axis
     modelViewMatrix = mult(modelViewMatrix, rotateY(theta[1])); // Rotate along Y-axis
     modelViewMatrix = mult(modelViewMatrix, rotateZ(theta[2])); // Rotate along Z-axis
@@ -963,14 +743,14 @@ function disableUI()
 {
     subdivSlider.disabled = true;
     sizeSlider.disabled = true;
-    // iterSlider.disabled = true;
     checkTex1.disabled = true;
     checkTex2.disabled = true;
     checkTex3.disabled = true;
-    // startBtn.disabled = true;
-    // startAnimationBtn.disabled = true;
     resetGasketBtn.disabled = true;
     resetSettingsBtn.disabled = true;
+    rotateX.disabled = true;
+    rotateY.disabled = true;
+    rotateZ.disabled = true;
 }
 
 // Enable the UI elements after the animation is completed
@@ -978,15 +758,14 @@ function enableUI()
 {
     subdivSlider.disabled = false;
     sizeSlider.disabled = false;
-    // iterSlider.disabled = false;
     checkTex1.disabled = false;
     checkTex2.disabled = false;
     checkTex3.disabled = false;
-
-    // startBtn.disabled = false;
-    // startAnimationBtn.disabled = false;
     resetGasketBtn.disabled = false;
     resetSettingsBtn.disabled = false;
+    rotateX.disabled = false;
+    rotateY.disabled = false;
+    rotateZ.disabled = false;
 }
 
 // Reset all necessary variables to their default values
@@ -1032,22 +811,8 @@ function configureTexture(tex)
 /*-----------------------------------------------------------------------------------*/
 // 3D Sierpinski Gasket
 /*-----------------------------------------------------------------------------------*/
-
-// Form a triangle
-// function triangle(a, b, c, color)
-// {
-//     colors.push(baseColors[color]);
-//     points.push(a);
-//     textures.push(texCoord[0]);
-//     colors.push(baseColors[color]);
-//     points.push(b);
-//     textures.push(texCoord[1]);
-//     colors.push(baseColors[color]);
-//     points.push(c);
-//     textures.push(texCoord[2]);
-// }
 function triangle(a, b, c, colorIndex) {
-    colors.push(faceColors[colorIndex]); // Use updated face color
+    colors.push(faceColors[colorIndex]); 
     points.push(a);
     textures.push(texCoord[0]);
 
@@ -1105,13 +870,6 @@ function divideTetra(a, b, c, d, count)
 
 function startAnimation() {
     animFlag = !animFlag;   // Toggle the animation flag to be true or false
-    // if (!animFlag) {
-    //     animFlag = true;
-    //     // animate();
-    //     disableUI();
-    //     resetValue();
-    //     animUpdate();
-    // }
 
     // Start animation
     if (animFlag) {
@@ -1127,28 +885,6 @@ function startAnimation() {
     }
 
 }
-// Animation control
-// document.getElementById("start-stop").onclick = function() {
-//     animFlag = !animFlag;
-//     if (animFlag) {
-//         disableUI();
-//         resetValue();
-//         animUpdate();
-//         document.getElementById("start-stop").innerHTML = "Stop";
-//     } else {
-//         enableUI();
-//         window.cancelAnimationFrame(animFrame);
-//         document.getElementById("start-stop").innerHTML = "Start";
-//     }
-// };
-
-    // startBtn.onclick = function()
-	// {
-	// 	animFlag = true;
-    //     disableUI();
-    //     resetValue();
-    //     animUpdate();
-	// };
 
 function resetGasketPosition() {
     // Reset the position of the gasket to the center of the screen
@@ -1163,23 +899,16 @@ function resetGasketPosition() {
     sizeSlider.value = 1.;
     document.getElementById("size-value").textContent = "1.0"; // Update size slider display
 
+    // To handle the case when the animation is running and user press it
+    if (animFlag) {
+        document.getElementById("start-animation-btn").innerHTML = "Start";
+    }
+
     // Recalculate boundaries based on the reset scale
     recalcBoundary();
 
     render();
-    
 }
-    
-
-// function resetGasket() {
-//     theta = [0, 0, 0];
-//     move = [0, 0, 0];
-//     scaleNum = 1.0;
-//     boundaryHitCount = 0; // Reset wall hit count
-//     wallHitCountDisplay.textContent = boundaryHitCount;
-//     firstTime = true; // Indicate first-time rendering
-//     render();
-// }
 
 function resetGasket() {
 
@@ -1200,13 +929,13 @@ function resetGasket() {
     console.log("Current axis from button:", axis);
 
     // Reset transformation variables
-    theta = [0, 0, 0]; // Reset rotation angles
-    move = [0, 0, 0];  // Reset movement to center
-    scaleNum = 1.0;    // Reset scale to default
-    sizeValue = 1.0;   // Reset size value
-    boundaryHitCount = 0; // Reset wall hit count
-    animSeq = 0;       // Reset animation sequence
-    firstTime = true;  // Indicate first-time rendering after reset
+    theta = [0, 0, 0];  
+    move = [0, 0, 0];   
+    scaleNum = 1.0;     
+    sizeValue = 1.0;    
+    boundaryHitCount = 0; 
+    animSeq = 0;       
+    firstTime = true;  
 
     // Reset boundary values dynamically based on the reset scale
     recalcBoundary();
@@ -1220,78 +949,6 @@ function resetGasket() {
     // Re-render the gasket in its reset state
     render();
 }
-
-
-// function resetSettings() {
-//     // Reset the animation frame
-//     if (animFlag) {
-//         startAnimation;
-//     }
-//     subdivSlider.value = 3;
-//     sizeSlider.value = 1.0;
-//     scaleSlider.value = 1.5;
-//     bgColor.value = "#ffffff";
-//     boundaryHitCount = 0; // Reset wall hit count
-//     wallHitCountDisplay.textContent = boundaryHitCount;
-//     resetGasket();
-// }
-
-// function resetSettings() {
-//     // Stop the animation if it's running
-//     if (animFlag) {
-//         animFlag = false;
-//         window.cancelAnimationFrame(animFrame); // Cancel any ongoing animation
-//         document.getElementById("start-animation-btn").innerHTML = "Start"; // Reset the animation button label
-//     }
-
-//     // Reset sliders to default values
-//     subdivSlider.value = 3; // Default subdivision level
-//     sizeSlider.value = 1.0; // Default size
-//     speedSlider.value = 1.0; // Default animation speed
-
-//     // Update displayed values
-//     subdivValue.innerHTML = subdivSlider.value;
-//     document.getElementById("size-value").textContent = sizeSlider.value;
-//     document.getElementById("speed-value").textContent = speedSlider.value;
-
-//     // Reset color picker to default background color
-//     bgColor.value = "#FFEB99"; // Default background color
-//     const rgb = hexToRgb(bgColor.value);
-//     gl.clearColor(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1.0); // Update WebGL background color
-
-//     // Reset face colors and opacity to defaults
-//     face1Color.value = "#ff3333"; // Default color for Face 1
-//     face1Opacity.value = 1.0; // Default opacity for Face 1
-//     face2Color.value = "#33ff33"; // Default color for Face 2
-//     face2Opacity.value = 1.0; // Default opacity for Face 2
-//     face3Color.value = "#3333ff"; // Default color for Face 3
-//     face3Opacity.value = 1.0; // Default opacity for Face 3
-//     face4Color.value = "#ffffff"; // Default color for Face 4
-//     face4Opacity.value = 1.0; // Default opacity for Face 4
-
-//     // Reset toggles to default unchecked state
-//     toggleWallColor.checked = false;
-//     toggleWallRandomMovement.checked = false;
-//     toggleWallVibrate.checked = false;
-
-//     // Reset boundary hit count display
-//     boundaryHitCount = 0; // Reset the wall hit count
-//     wallHitCountDisplay.textContent = boundaryHitCount;
-
-//     // Reset sound settings
-//     soundEnabled = false;
-//     document.getElementById("sound-toggle-input").checked = false;
-
-//     // Reset rotation axis to default (Z-axis)
-//     axis = 2; // Default to Z-axis
-//     const rotationAxisInputs = document.querySelectorAll('input[name="rotation-axis"]');
-//     rotationAxisInputs.forEach((input) => {
-//         input.checked = input.value === "z"; // Default to Z-axis
-//     });
-
-//     // Call resetGasket to reset the gasket state
-//     resetGasket();
-// }
 
 function resetSettings() {
     // Stop the animation if it's running
@@ -1392,8 +1049,6 @@ function resetSettings() {
     resetGasket();
 }
 
-
-
 function hexToRgb(hex) {
     const bigint = parseInt(hex.slice(1), 16);
     const r = (bigint >> 16) & 255;
@@ -1408,46 +1063,6 @@ function rgbToHex(vec4Color) {
     const b = Math.round(vec4Color[2] * 255);
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
-
-
-// // Function to generate a random color (RGBA)
-// function getRandomColor() {
-//     return vec4(Math.random(), Math.random(), Math.random(), 1.0);
-// }
-
-// Function to change the colors of the gasket randomly
-// function changeGasketColors() {
-//     // Reset the colors array with random colors for each vertex
-//     colors = [];
-//     for (let i = 0; i < points.length; i++) {
-//         colors.push(getRandomColor());
-//     }
-
-//     // Update the color buffer with new random colors
-//     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
-//     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
-//     console.log("Gasket colors updated");
-// }
-
-// function changeGasketColors() {
-//     // Generate random colors for the four faces
-//     faceColors = [
-//         vec4(Math.random(), Math.random(), Math.random(), 1.0), // Random color for Face 1
-//         vec4(Math.random(), Math.random(), Math.random(), 1.0), // Random color for Face 2
-//         vec4(Math.random(), Math.random(), Math.random(), 1.0), // Random color for Face 3
-//         vec4(Math.random(), Math.random(), Math.random(), 1.0)  // Random color for Face 4
-//     ];
-
-//     // Update the colors for all faces
-//     colors = []; // Reset the colors array
-//     divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum); // Recompute the geometry with new colors
-
-//     // Update the color buffer
-//     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
-//     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
-
-//     console.log("Random colors applied to gasket faces:", faceColors);
-// }
 
 function changeGasketColors() {
     // Get the current opacity values from the sliders
@@ -1490,16 +1105,9 @@ function updateFaceColor(faceIndex, colorHex, opacity) {
     colors = []; // Reset colors
     divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum);
 
-    // Update the colors array for the specific face
-    // for (let i = faceIndex * 3; i < (faceIndex + 1) * 3; i++) {
-    //     colors[i] = faceColors[faceIndex]; // Update the colors of the face
-    // }
-
     // Update the color buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
-
-    // render(); // Re-render the scene with updated colors
 
     // Re-render the scene without recomputing transformations
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1524,21 +1132,6 @@ function playWallHitSound() {
       audioElement.play(); // Play the sound
     }
   }
-
-// function vibratePage() {
-
-//     // if (!isVibrationEnabled) return; // Do nothing if vibration is disabled
-
-//     const body = document.body;
-    
-//     // Add the 'shake' class to start the vibration effect
-//     body.classList.add('shake');
-    
-//     // Remove the 'shake' class after the animation ends (500ms in this case)
-//     setTimeout(() => {
-//         body.classList.remove('shake');
-//     }, 500);
-// }
 
 function vibratePage(direction) {
 
@@ -1636,4 +1229,3 @@ function applySettings(settings) {
 
     console.log("Settings applied and rendered:", settings);
 }
-
