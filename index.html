@@ -80,45 +80,186 @@
       <div class="antenna-container"></div>
       <div class="television-container">
         <div class="television-inner">
-          <div class="television-screen-container">
-            <div class="television-crt">
-              <div class="television-screen">
-                <!-- WebGL Canvas -->
-                <canvas id="gl-canvas" width="640" height="360">
-                  Error: your browser doesn't support the HTML5 canvas element
-                </canvas>
-                <img
-                  id="texture-1"
-                  src="https://i.postimg.cc/kMKrJd9B/BG001.jpg"
-                  alt="texture 1"
-                  crossorigin="anonymous"
-                  hidden
-                />
-                <img
-                  id="texture-2"
-                  src="https://i.postimg.cc/vHgnmCxf/bricks.jpg"
-                  alt="texture 2"
-                  crossorigin="anonymous"
-                  hidden
-                />
-                <img
-                  id="texture-3"
-                  src="https://i.postimg.cc/jdfgPn0g/dot-dot-pic.png"
-                  alt="texture 3"
-                  crossorigin="anonymous"
-                  hidden
-                />
+          <div class="television-left-section">
+            <div class="television-screen-container">
+              <div class="television-crt">
+                <div class="television-screen">
+                  <!-- WebGL Canvas -->
+                  <canvas id="gl-canvas" width="640" height="360">
+                    Error: your browser doesn't support the HTML5 canvas element
+                  </canvas>
+                  <img
+                    id="texture-1"
+                    src="https://i.postimg.cc/kMKrJd9B/BG001.jpg"
+                    alt="texture 1"
+                    crossorigin="anonymous"
+                    hidden
+                  />
+                  <img
+                    id="texture-2"
+                    src="https://i.postimg.cc/vHgnmCxf/bricks.jpg"
+                    alt="texture 2"
+                    crossorigin="anonymous"
+                    hidden
+                  />
+                  <img
+                    id="texture-3"
+                    src="https://i.postimg.cc/jdfgPn0g/dot-dot-pic.png"
+                    alt="texture 3"
+                    crossorigin="anonymous"
+                    hidden
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="tv-radio-section">
+              <div class="tv-radio-group">
+                <label>Rotation Axis:</label>
+                <div class="radio-input">
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="rotate-x"
+                      name="rotation-axis"
+                      value="x"
+                    />
+                    <span class="text">X</span>
+                    <span class="bottom-line"></span>
+                  </label>
+
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="rotate-y"
+                      name="rotation-axis"
+                      value="y"
+                    />
+                    <span class="text">Y</span>
+                    <span class="bottom-line"></span>
+                  </label>
+
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="rotate-z"
+                      name="rotation-axis"
+                      value="z"
+                      checked
+                    />
+                    <span class="text">Z</span>
+                    <span class="bottom-line"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="tv-radio-group">
+                <label>Sound:</label>
+                <div class="radio-input">
+                  <!-- Sound Choice -->
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="sound-kiu"
+                      name="sound-choice"
+                      value="kiu-sound-single.mp3"
+                      checked
+                    />
+                    <span class="text">Kiu</span>
+                    <span class="bottom-line"></span>
+                  </label>
+
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="sound-bounce"
+                      name="sound-choice"
+                      value="bouncing-sound-single.mp3"
+                    />
+                    <span class="text">Bounce</span>
+                    <span class="bottom-line"></span>
+                  </label>
+
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="sound-punch"
+                      name="sound-choice"
+                      value="punch-sound-single.mp3"
+                    />
+                    <span class="text">Punch</span>
+                    <span class="bottom-line"></span>
+                  </label>
+                </div>
+
+                <!-- Existing Audio Element -->
+                <audio
+                  id="hit-sound"
+                  src="kiu-sound-single.mp3"
+                  preload="auto"
+                ></audio>
+              </div>
+
+              <div class="tv-radio-group">
+                <label>Texture:</label>
+                <div class="radio-input">
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="check-texture-1"
+                      name="texture-choice"
+                      value="1"
+                      checked
+                    />
+                    <span class="text">Texture 1</span>
+                    <span class="bottom-line"></span>
+                  </label>
+
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="check-texture-2"
+                      name="texture-choice"
+                      value="2"
+                    />
+                    <span class="text">Texture 2</span>
+                    <span class="bottom-line"></span>
+                  </label>
+
+                  <label class="label">
+                    <div class="back-side"></div>
+                    <input
+                      type="radio"
+                      id="check-texture-3"
+                      name="texture-choice"
+                      value="3"
+                    />
+                    <span class="text">Texture 3</span>
+                    <span class="bottom-line"></span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
           <div class="television-lateral">
-            <label for="wall-hit-count">Wall Hit Count:</label>
-            <p id="wall-hit-count">0</p>
+            <div>
+              <label for="wall-hit-count">Wall Hit Count:</label>
+              <p id="wall-hit-count">0</p>
+            </div>
+            <!-- <label for="wall-hit-count">Wall Hit Count:</label>
+            <p id="wall-hit-count">0</p> -->
             <!-- <button id="toggle-sound-btn">Unmute Sound</button> -->
 
-            <div class="sound-toggle">
-              <!-- <input type="checkbox" id="sound-toggle-input" /> -->
-              <input type="checkbox" id="sound-toggle-input" checked />
+            <!-- <div class="sound-toggle"> -->
+            <!-- <input type="checkbox" id="sound-toggle-input" /> -->
+            <!-- <input type="checkbox" id="sound-toggle-input" checked />
               <label for="sound-toggle-input" class="toggleSwitch">
                 <div class="speaker">
                   <svg
@@ -166,7 +307,7 @@
                   </svg>
                 </div>
               </label>
-            </div>
+            </div> -->
 
             <!-- <div>
               <input
@@ -197,9 +338,9 @@
               <label for="sound-punch">Punch Sound</label>
             </div> -->
 
-            <div class="radio-input">
-              <!-- Sound Choice -->
-              <label class="label">
+            <!-- <div class="radio-input"> -->
+            <!-- Sound Choice -->
+            <!-- <label class="label">
                 <div class="back-side"></div>
                 <input
                   type="radio"
@@ -235,16 +376,16 @@
                 <span class="text">Punch</span>
                 <span class="bottom-line"></span>
               </label>
-            </div>
+            </div> -->
 
             <!-- Existing Audio Element -->
-            <audio
+            <!-- <audio
               id="hit-sound"
               src="kiu-sound-single.mp3"
               preload="auto"
-            ></audio>
+            ></audio> -->
 
-            <div class="slider">
+            <!-- <div class="slider">
               Number of Subdivisions:
               <br />1<input
                 id="subdiv-slider"
@@ -256,9 +397,9 @@
             </div>
             <div class="textbox">
               <p id="subdiv-value">3</p>
-            </div>
+            </div> -->
 
-            <label>Rotation Axis:</label>
+            <!-- <label>Rotation Axis:</label> -->
             <!-- <div>
               <input type="radio" id="rotateX" name="rotation-axis" value="x" />
               <label for="rotateX">X</label>
@@ -273,7 +414,7 @@
               />
               <label for="rotateZ">Z</label>
             </div> -->
-            <div class="radio-input">
+            <!-- <div class="radio-input">
               <label class="label">
                 <div class="back-side"></div>
                 <input
@@ -310,9 +451,9 @@
                 <span class="text">Z</span>
                 <span class="bottom-line"></span>
               </label>
-            </div>
+            </div> -->
 
-            <label for="size-slider">Initial Size:</label>
+            <!-- <label for="size-slider">Initial Size:</label>
             <div class="slider">
               Initial Size:
               <br />0.5<input
@@ -326,19 +467,19 @@
             </div>
             <div class="textbox">
               <p id="size-value">1.0</p>
-            </div>
+            </div> -->
 
             <!-- Speed Slider -->
-            <label for="speed-slider">Speed:</label>
+            <!-- <label for="speed-slider">Speed:</label>
             <input id="speed-slider" type="range" min="1" max="10" value="1" />
-            <span id="speed-value">1</span>x
+            <span id="speed-value">1</span>x -->
 
             <!-- Background Color Picker -->
-            <label for="bg-color">Background Color:</label>
-            <input type="color" id="bg-color" value="#ffeb99" />
+            <!-- <label for="bg-color">Background Color:</label>
+            <input type="color" id="bg-color" value="#ffeb99" /> -->
 
             <!-- Color and Opacity Controls -->
-            <label>Face Colors:</label>
+            <!-- <label>Face Colors:</label>
             <div>
               Face 1 Color:
               <input type="color" id="face1-color" value="#ff3333" /> Opacity:
@@ -389,7 +530,7 @@
                 step="0.1"
                 value="1"
               />
-            </div>
+            </div> -->
 
             <!-- Radio buttons for for textures -->
             <!-- <div class="checkText">Enable Texture 1</div>
@@ -417,7 +558,7 @@
               name="radio"
             /> -->
 
-            <div class="radio-input">
+            <!-- <div class="radio-input">
               <label class="label">
                 <div class="back-side"></div>
                 <input
@@ -454,10 +595,10 @@
                 <span class="text">Texture 3</span>
                 <span class="bottom-line"></span>
               </label>
-            </div>
+            </div> -->
 
             <!-- Toggles -->
-            <div>
+            <!-- <div>
               <input type="checkbox" id="toggle-wall-color" />
               <label for="toggle-wall-color">Hit Wall & Random Color</label>
             </div>
@@ -470,11 +611,167 @@
             <div>
               <input type="checkbox" id="toggle-wall-vibrate" />
               <label for="toggle-wall-vibrate">Hit Wall & Vibration</label>
+            </div> -->
+
+            <div class="toggle-container">
+              <div class="toggle-group">
+                <span class="label">Random Color</span>
+                <label class="switch">
+                  <input class="cb" type="checkbox" id="toggle-wall-color" />
+                  <span class="toggle">
+                    <span class="left">off</span>
+                    <span class="right">on</span>
+                  </span>
+                </label>
+              </div>
+
+              <div class="toggle-group">
+                <span class="label">Random Movement</span>
+                <label class="switch">
+                  <input
+                    class="cb"
+                    type="checkbox"
+                    id="toggle-wall-random-movement"
+                  />
+                  <span class="toggle">
+                    <span class="left">off</span>
+                    <span class="right">on</span>
+                  </span>
+                </label>
+              </div>
+
+              <div class="toggle-group">
+                <span class="label">Vibration</span>
+                <label class="switch">
+                  <input class="cb" type="checkbox" id="toggle-wall-vibrate" />
+                  <span class="toggle">
+                    <span class="left">off</span>
+                    <span class="right">on</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="slider-group-container">
+              <div class="slider-group-left-section">
+                <div class="slider-group-left-right">
+                  <h3>Background Color</h3>
+                  <input type="color" id="bg-color" value="#ffeb99" />
+                </div>
+                <div class="slider-group-left-right">
+                  <!-- Subdivisions Slider -->
+                  <div class="slider-group">
+                    <h3>Subdivisions</h3>
+                    <input
+                      type="range"
+                      id="subdiv-slider"
+                      min="1"
+                      max="5"
+                      value="3"
+                      orient="vertical"
+                    />
+                    <p id="subdiv-value">3</p>
+                  </div>
+
+                  <!-- Size Slider -->
+                  <div class="slider-group">
+                    <h3>Size</h3>
+                    <input
+                      type="range"
+                      id="size-slider"
+                      min="0.5"
+                      max="2"
+                      step="0.1"
+                      value="1.0"
+                      orient="vertical"
+                    />
+                    <p id="size-value">1.0</p>
+                  </div>
+
+                  <!-- Speed Slider -->
+                  <div class="slider-group">
+                    <h3>Speed</h3>
+                    <input
+                      type="range"
+                      id="speed-slider"
+                      min="1"
+                      max="10"
+                      value="1"
+                      orient="vertical"
+                    />
+                    <p id="speed-value">1</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Face 1 Slider -->
+              <div class="slider-group">
+                <h3>Face 1</h3>
+                <input type="color" id="face1-color" value="#ff3333" />
+                <input
+                  type="range"
+                  id="face1-opacity"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="1"
+                  orient="vertical"
+                />
+                <p id="face1-opacity-value">1</p>
+              </div>
+
+              <!-- Face 2 Slider -->
+              <div class="slider-group">
+                <h3>Face 2</h3>
+                <input type="color" id="face2-color" value="#33ff33" />
+                <input
+                  type="range"
+                  id="face2-opacity"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="1"
+                  orient="vertical"
+                />
+                <p id="face2-opacity-value">1</p>
+              </div>
+
+              <!-- Face 3 Slider -->
+              <div class="slider-group">
+                <h3>Face 3</h3>
+                <input type="color" id="face3-color" value="#3333ff" />
+                <input
+                  type="range"
+                  id="face3-opacity"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="1"
+                  orient="vertical"
+                />
+                <p id="face3-opacity-value">1</p>
+              </div>
+
+              <!-- Face 4 Slider -->
+              <div class="slider-group">
+                <h3>Face 4</h3>
+                <input type="color" id="face4-color" value="#ffffff" />
+                <input
+                  type="range"
+                  id="face4-opacity"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="1"
+                  orient="vertical"
+                />
+                <p id="face4-opacity-value">1</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="buttons">
+        <div class="bottom-buttons-section">
           <button id="power-button">Power</button>
           <button id="save-settings-btn">Save Settings</button>
           <button id="load-settings-btn">Load Settings</button>
@@ -483,6 +780,58 @@
           <button id="reset-settings-btn">Reset All Settings</button>
 
           <input type="file" id="file-input" style="display: none" />
+
+          <div class="sound-toggle">
+            <!-- <input type="checkbox" id="sound-toggle-input" /> -->
+            <input type="checkbox" id="sound-toggle-input" checked />
+            <label for="sound-toggle-input" class="toggleSwitch">
+              <div class="speaker">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.0"
+                  viewBox="0 0 75 75"
+                >
+                  <path
+                    d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z"
+                    style="
+                      stroke: #fff;
+                      stroke-width: 5;
+                      stroke-linejoin: round;
+                      fill: #fff;
+                    "
+                  ></path>
+                  <path
+                    d="M48,27.6a19.5,19.5 0 0 1 0,21.4M55.1,20.5a30,30 0 0 1 0,35.6M61.6,14a38.8,38.8 0 0 1 0,48.6"
+                    style="
+                      fill: none;
+                      stroke: #fff;
+                      stroke-width: 5;
+                      stroke-linecap: round;
+                    "
+                  ></path>
+                </svg>
+              </div>
+              <div class="mute-speaker">
+                <svg
+                  version="1.0"
+                  viewBox="0 0 75 75"
+                  stroke="#fff"
+                  stroke-width="5"
+                >
+                  <path
+                    d="m39,14-17,15H6V48H22l17,15z"
+                    fill="#fff"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="m49,26 20,24m0-24-20,24"
+                    fill="#fff"
+                    stroke-linecap="round"
+                  ></path>
+                </svg>
+              </div>
+            </label>
+          </div>
         </div>
       </div>
     </div>

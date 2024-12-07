@@ -157,17 +157,20 @@ function getUIElement()
     wallHitCountDisplay = document.getElementById("wall-hit-count");
 
     const audioElement = document.getElementById("hit-sound");
-    const soundRadios = document.querySelectorAll('input[name="wall-hit-sound"]');
+    const soundRadios = document.querySelectorAll('input[name="sound-choice"]');
+    console.log(document.querySelectorAll('input[name="sound-choice"]'));
 
     toggleRandomColor = document.getElementById("toggle-wall-color");
 
     soundRadios.forEach((radio) => {
+        console.log(`Attaching listener to radio: ${radio.id}`);
         radio.addEventListener("change", (event) => {
-          const selectedSound = event.target.value;
-          audioElement.src = selectedSound; // Update the audio source
-          console.log(`Wall Hit Sound set to: ${selectedSound}`);
+            console.log("Event listener triggered");
+            const selectedSound = event.target.value; // Get the selected sound file from the radio button's value
+            audioElement.src = selectedSound; // Update the <audio> element's source
+            console.log(`Sound updated to: ${selectedSound}`); // Debug log
         });
-      });
+    });
 
     // document.getElementById("toggle-sound-btn").addEventListener("click", function () {
     //     soundEnabled = !soundEnabled; // Toggle the sound state
@@ -245,6 +248,14 @@ function getUIElement()
     toggleWallColor = document.getElementById("toggle-wall-color");
     toggleWallRandomMovement = document.getElementById("toggle-wall-random-movement");
     toggleWallVibrate = document.getElementById("toggle-wall-vibrate");
+
+    toggleWallVibrate.addEventListener("change", function () {
+        if (toggleWallVibrate.checked) {
+            console.log("Wall Vibration enabled");
+        } else {
+            console.log("Wall Vibration disabled");
+        }
+    });
 
     // Checkboxes
     // toggleHitWallRandomAxis = document.getElementById("toggle-hit-wall-random-axis");
@@ -401,6 +412,8 @@ function getUIElement()
             console.log("Random Rotation Movement enabled");
         } else {
             console.log("Random Rotation Movement disabled");
+            // resetGasket(); // Run resetGasket when unchecked
+            resetGasketPosition();
         }
     });
 
@@ -627,12 +640,7 @@ function recalcBoundary() {
     console.log("Top Boundary:", topBoundary);
     console.log("Bottom Boundary:", bottomBoundary);
 
-    // while sizeValue = 1.0 and scaleNum = 1.5
-    // var hBoundary = 1.87;
-    // var topBoundary = 0.73125; 
-    // var bottomBoundary = -0.89;
-
-    // whien sizeValue = 1.0 and scaleNum = 1.0
+    // whien sizeValue = 1.0
     // var hBoundary = 1.87;
     // var topBoundary = 0.73125; 
     // var bottomBoundary = -0.89;
@@ -728,9 +736,6 @@ function animUpdate()
             }
             console.log(`Enlarging: scaleNum = ${scaleNum}`);
             break;
-        
-        // Not sure want to have ensmalling effect or not
-        // Gradually reduce the size of gasket
 
         case 5: // Random movement around the screen
             if (move[0] > hBoundary || move[0] < -hBoundary) {
@@ -811,15 +816,58 @@ function animUpdate()
                 //     theta[axis] -= 360; // Keep theta within 0-360 degrees
                 // }
                 
+            // // Super random movement
+            // if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
+            //     // Super random movement logic
+            //     theta[axis] += 2.0 * speed; // Rotate randomly
+            //     if (theta[axis] >= 360) {
+            //         theta[axis] -= 360; // Keep theta within 0-360 degrees
+            //     }
+            //     console.log(`Random Rotation: Axis=${axis}, Theta=${theta[axis]}`);
+            // }
+            
             // Super random movement
+            let initialState = {
+                theta: [...theta],
+                axis: axis,
+                moveDir: [...moveDir],
+                hBoundary: hBoundary,
+                topBoundary: topBoundary,
+                bottomBoundary: bottomBoundary,
+            };
+
+            let randomMovementEnabled = false; // Flag to track the state of random movement
+
             if (toggleWallRandomMovement && toggleWallRandomMovement.checked) {
-                // Super random movement logic
-                theta[axis] += 2.0 * speed; // Rotate randomly
+                if (!randomMovementEnabled) {
+                    // Enable random movement for the first time
+                    randomMovementEnabled = true;
+                    console.log("Random movement enabled.");
+                }
+                // Continue with random movement logic
+                theta[axis] += 2.0 * speed;
                 if (theta[axis] >= 360) {
-                    theta[axis] -= 360; // Keep theta within 0-360 degrees
+                    theta[axis] -= 360;
                 }
                 console.log(`Random Rotation: Axis=${axis}, Theta=${theta[axis]}`);
+            } else {
+                if (randomMovementEnabled) {
+                    // Reset state only once when disabling
+                    // console.log("Random movement disabled. Resetting values.");
+                    // theta = [0, 0, 0];
+                    // move = [0, 0, 0];
+                    // firstTime = true; // Indicate first-time rendering
+                    // randomMovementEnabled = false; // Update the flag
+
+                    
+                    // render(); // Re-render the scene
+
+                    resetGasket(); // Reset the gasket to its original position
+                }
+                // Normal behavior continues without interference
             }
+
+
 
             break;
 
@@ -1040,29 +1088,249 @@ function startAnimation() {
     //     animUpdate();
 	// };
 
-function resetGasket() {
+function resetGasketPosition() {
+    // Reset the position of the gasket to the center of the screen
     theta = [0, 0, 0];
     move = [0, 0, 0];
-    scaleNum = 1.0;
+    scaleNum = 1.5;
+    sizeValue = 1.0;
     boundaryHitCount = 0; // Reset wall hit count
     wallHitCountDisplay.textContent = boundaryHitCount;
     firstTime = true; // Indicate first-time rendering
+    
+    sizeSlider.value = 1.;
+    document.getElementById("size-value").textContent = "1.0"; // Update size slider display
+
+    // Recalculate boundaries based on the reset scale
+    recalcBoundary();
+
+    render();
+    
+}
+    
+
+// function resetGasket() {
+//     theta = [0, 0, 0];
+//     move = [0, 0, 0];
+//     scaleNum = 1.0;
+//     boundaryHitCount = 0; // Reset wall hit count
+//     wallHitCountDisplay.textContent = boundaryHitCount;
+//     firstTime = true; // Indicate first-time rendering
+//     render();
+// }
+
+function resetGasket() {
+
+    // Get the current rotation axis from the input elements
+    const rotationAxisInputs = document.querySelectorAll('input[name="rotation-axis"]');
+    rotationAxisInputs.forEach((input) => {
+        if (input.checked) {
+            if (input.value === "x") {
+                axis = 0; // X-axis
+            } else if (input.value === "y") {
+                axis = 1; // Y-axis
+            } else if (input.value === "z") {
+                axis = 2; // Z-axis
+            }
+        }
+    });
+
+    console.log("Current axis from button:", axis);
+
+    // Reset transformation variables
+    theta = [0, 0, 0]; // Reset rotation angles
+    move = [0, 0, 0];  // Reset movement to center
+    scaleNum = 1.0;    // Reset scale to default
+    sizeValue = 1.0;   // Reset size value
+    boundaryHitCount = 0; // Reset wall hit count
+    animSeq = 0;       // Reset animation sequence
+    firstTime = true;  // Indicate first-time rendering after reset
+
+    // Reset boundary values dynamically based on the reset scale
+    recalcBoundary();
+
+    // Reset gasket geometry
+    points = []; // Clear existing points
+    colors = []; // Clear existing colors
+    textures = []; // Clear existing textures
+    divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum); // Recalculate geometry
+
+    // Re-render the gasket in its reset state
     render();
 }
 
+
+// function resetSettings() {
+//     // Reset the animation frame
+//     if (animFlag) {
+//         startAnimation;
+//     }
+//     subdivSlider.value = 3;
+//     sizeSlider.value = 1.0;
+//     scaleSlider.value = 1.5;
+//     bgColor.value = "#ffffff";
+//     boundaryHitCount = 0; // Reset wall hit count
+//     wallHitCountDisplay.textContent = boundaryHitCount;
+//     resetGasket();
+// }
+
+// function resetSettings() {
+//     // Stop the animation if it's running
+//     if (animFlag) {
+//         animFlag = false;
+//         window.cancelAnimationFrame(animFrame); // Cancel any ongoing animation
+//         document.getElementById("start-animation-btn").innerHTML = "Start"; // Reset the animation button label
+//     }
+
+//     // Reset sliders to default values
+//     subdivSlider.value = 3; // Default subdivision level
+//     sizeSlider.value = 1.0; // Default size
+//     speedSlider.value = 1.0; // Default animation speed
+
+//     // Update displayed values
+//     subdivValue.innerHTML = subdivSlider.value;
+//     document.getElementById("size-value").textContent = sizeSlider.value;
+//     document.getElementById("speed-value").textContent = speedSlider.value;
+
+//     // Reset color picker to default background color
+//     bgColor.value = "#FFEB99"; // Default background color
+//     const rgb = hexToRgb(bgColor.value);
+//     gl.clearColor(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1.0); // Update WebGL background color
+
+//     // Reset face colors and opacity to defaults
+//     face1Color.value = "#ff3333"; // Default color for Face 1
+//     face1Opacity.value = 1.0; // Default opacity for Face 1
+//     face2Color.value = "#33ff33"; // Default color for Face 2
+//     face2Opacity.value = 1.0; // Default opacity for Face 2
+//     face3Color.value = "#3333ff"; // Default color for Face 3
+//     face3Opacity.value = 1.0; // Default opacity for Face 3
+//     face4Color.value = "#ffffff"; // Default color for Face 4
+//     face4Opacity.value = 1.0; // Default opacity for Face 4
+
+//     // Reset toggles to default unchecked state
+//     toggleWallColor.checked = false;
+//     toggleWallRandomMovement.checked = false;
+//     toggleWallVibrate.checked = false;
+
+//     // Reset boundary hit count display
+//     boundaryHitCount = 0; // Reset the wall hit count
+//     wallHitCountDisplay.textContent = boundaryHitCount;
+
+//     // Reset sound settings
+//     soundEnabled = false;
+//     document.getElementById("sound-toggle-input").checked = false;
+
+//     // Reset rotation axis to default (Z-axis)
+//     axis = 2; // Default to Z-axis
+//     const rotationAxisInputs = document.querySelectorAll('input[name="rotation-axis"]');
+//     rotationAxisInputs.forEach((input) => {
+//         input.checked = input.value === "z"; // Default to Z-axis
+//     });
+
+//     // Call resetGasket to reset the gasket state
+//     resetGasket();
+// }
+
 function resetSettings() {
-    // Reset the animation frame
+    // Stop the animation if it's running
     if (animFlag) {
-        startAnimation;
+        animFlag = false;
+        window.cancelAnimationFrame(animFrame); // Cancel ongoing animation
+        document.getElementById("start-animation-btn").innerHTML = "Start"; // Reset animation button label
     }
+
+    // Reset sliders and update state variables
     subdivSlider.value = 3;
     sizeSlider.value = 1.0;
-    scaleSlider.value = 1.5;
-    bgColor.value = "#ffffff";
-    boundaryHitCount = 0; // Reset wall hit count
+    // scaleSlider.value = 1.5;
+    speedSlider.value = 1.0;
+
+    subdivNum = parseInt(subdivSlider.value);
+    sizeValue = parseFloat(sizeSlider.value);
+    // scaleNum = parseFloat(scaleSlider.value);
+    speed = parseFloat(speedSlider.value);
+
+    // Update displayed values
+    subdivValue.innerHTML = subdivSlider.value;
+    document.getElementById("size-value").textContent = sizeSlider.value;
+    document.getElementById("speed-value").textContent = speedSlider.value;
+
+    // Reset background color
+    bgColor.value = "#FFEB99";
+    const rgb = hexToRgb(bgColor.value);
+    gl.clearColor(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1.0);
+
+    // Reset face colors and opacity
+    faceColors = [
+        vec4(1.0, 0.2, 0.3, 1.0), // Face 1
+        vec4(0.0, 0.9, 1.0, 1.0), // Face 2
+        vec4(0.2, 0.2, 0.5, 1.0), // Face 3
+        vec4(1.0, 1.0, 1.0, 1.0), // Face 4
+    ];
+
+    face1Color.value = "#ff3333";
+    face2Color.value = "#33ff33";
+    face3Color.value = "#3333ff";
+    face4Color.value = "#ffffff";
+
+    face1Opacity.value = 1.0;
+    face2Opacity.value = 1.0;
+    face3Opacity.value = 1.0;
+    face4Opacity.value = 1.0;
+
+    // Reset toggles
+    toggleWallColor.checked = false;
+    toggleWallRandomMovement.checked = false;
+    toggleWallVibrate.checked = false;
+
+    // Reset sound settings
+    soundEnabled = false;
+    document.getElementById("sound-toggle-input").checked = false;
+
+    // Reset wall hit count
+    boundaryHitCount = 0;
     wallHitCountDisplay.textContent = boundaryHitCount;
+
+    // Reset rotation axis
+    axis = 2; // Default to Z-axis
+    const rotationAxisInputs = document.querySelectorAll('input[name="rotation-axis"]');
+    rotationAxisInputs.forEach((input) => {
+        input.checked = input.value === "z";
+    });
+
+    // Reset gasket state
+    theta = [0, 0, 0];
+    move = [0, 0, 0];
+    firstTime = true;
+
+    // Recalculate boundaries
+    recalcBoundary();
+
+    // Reset geometry and buffers
+    points = [];
+    colors = [];
+    textures = [];
+    divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum);
+
+    // Update buffers with reset geometry
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(textures), gl.STATIC_DRAW);
+
+    // Re-render the scene with updated state
+    // render();
+
+    console.log("Settings reset to default.");
+
     resetGasket();
 }
+
+
 
 function hexToRgb(hex) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -1211,6 +1479,8 @@ function playWallHitSound() {
 // }
 
 function vibratePage(direction) {
+
+    console.log(`Vibration triggered in direction: ${direction}`);
     const body = document.body;
 
     // Remove any existing shake classes to avoid conflicts

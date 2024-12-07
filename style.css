@@ -10,6 +10,7 @@ body {
   font-family: "Arial", sans-serif;
   background-color: #0f172a; /* Dark background for contrast */
   color: #ffffff;
+  overflow: hidden;
 }
 
 /* TV Case and Screen */
@@ -29,8 +30,18 @@ body {
   align-items: center;
   background: #444; /* Lighter inner border */
   border-radius: 10px;
-  width: 700px;
-  height: 420px;
+  /* width: 700px;
+  height: 420px; */
+  /* border: 2px solid purple; */
+}
+
+.television-left-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  /* border: 1px solid green; */
 }
 
 .television-screen-container {
@@ -41,8 +52,31 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* border: 1px solid green; */
 }
 
+.tv-radio-section {
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  width: 680px;
+  /* height: 400px; */
+  gap: 20px;
+}
+
+.tv-radio-group {
+  display: flex;
+  flex-direction: column; /* Stack label and toggle vertically */
+  align-items: center;
+  text-align: center;
+  gap: 10px; /* Space between the label and toggle */
+  /* width: 150px;  */
+}
 .television-crt {
   width: 660px;
   height: 380px;
@@ -63,6 +97,19 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.television-lateral {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: #444; /* Lighter inner border */
+  border-radius: 10px;
+  width: 600px;
+  /* height: 420px; */
+  height: 100%;
+  gap: 10px;
 }
 
 /* Buttons */
@@ -99,7 +146,7 @@ body {
 /* Input Controls */
 input[type="range"] {
   width: 100%;
-  margin: 5px 0;
+  /* margin: 5px 0; */
 }
 
 input[type="color"] {
@@ -154,7 +201,7 @@ input[type="checkbox"] {
   padding: 6px;
   border-radius: 8px;
   overflow: hidden;
-  height: 94px;
+  height: 64px;
 }
 
 .radio-input input {
@@ -162,8 +209,8 @@ input[type="checkbox"] {
 }
 
 .radio-input .label {
-  width: 70px;
-  height: 80px;
+  width: 45px;
+  height: 50px;
   background-color: #2a2a2a;
   border-radius: 4px;
   display: flex;
@@ -318,84 +365,443 @@ input[type="checkbox"] {
 #sound-toggle-input:hover + .toggleSwitch {
   background-color: rgb(61, 61, 61);
 }
+/* Dark Mode for Sliders Container */
+.slider-group-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  /* gap: 20px; */
+  padding: 20px;
+  /* background: linear-gradient(145deg, #1a1a1a, #0f0f0f); */
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+  margin-top: 20px;
+  /* max-width: 1000px; */
+}
 
+/* Individual Slider Group */
 .slider-group {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  gap: 10px;
+  width: 70px; /* Set consistent width for all sliders */
 }
 
-.slider-group label {
-  font-family: Arial, sans-serif;
+/* Slider Titles */
+.slider-group h3 {
   font-size: 14px;
-  margin-bottom: 8px;
-  color: #333;
-  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  color: #e0e0e0;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Slider Values */
+.slider-group p {
+  font-size: 13px;
+  color: #b0b0b0;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Vertical Range Sliders */
 .slider-group input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 15px;
-  background: linear-gradient(145deg, #d6d6d6, #ffffff);
-  border-radius: 15px;
-  box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 0.5),
-    inset 2px 2px 5px rgba(0, 0, 0, 0.15);
+  writing-mode: bt-lr; /* For vertical slider */
+  -webkit-appearance: slider-vertical;
+  appearance: slider-vertical;
+  width: 15px;
+  height: 150px; /* Uniform height for sliders */
+  background: linear-gradient(to bottom, #333, #1a1a1a); /* Darker gradient */
+  border-radius: 10px;
   outline: none;
-  transition: background 0.3s ease-in-out;
-  margin-top: 10px;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 10px;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
+/* 3D Slider Thumb */
 .slider-group input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 25px;
   height: 25px;
-  background: radial-gradient(circle, #e6e6e6, #c0c0c0);
-  border: 1px solid #aaa;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #c0c0c0);
+  border: 2px solid #aaa; /* Edge border for depth */
   border-radius: 50%;
-  box-shadow: -2px -2px 5px rgba(255, 255, 255, 0.6),
-    2px 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: -3px -3px 8px rgba(0, 0, 0, 0.3),
+    /* Slight black for top-left light */ 3px 3px 8px rgba(0, 0, 0, 0.7); /* Darker black for bottom-right shadow */
+
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Hover and Active Effect for Slider Thumb */
+.slider-group input[type="range"]::-webkit-slider-thumb:hover,
+.slider-group input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.1); /* Slightly larger for hover and active */
+  background: radial-gradient(
+    circle at 30% 30%,
+    #e0e0e0,
+    #b0b0b0
+  ); /* Slightly darker for hover/active */
+  box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.3),
+    /* Slightly darker black for top-left */ 4px 4px 10px rgba(0, 0, 0, 0.8); /* Slightly darker black for bottom-right */
+}
+
+/* Active Effect Specific Enhancements */
+.slider-group input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.2); /* Larger on click */
+  background: radial-gradient(
+    circle at 30% 30%,
+    #d0d0d0,
+    #a0a0a0
+  ); /* Darker shade */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    /* Inner shadow for click */ -4px -4px 10px rgba(0, 0, 0, 0.3),
+    /* Slightly darker black for top-left */ 4px 4px 10px rgba(0, 0, 0, 0.8); /* Slightly darker black for bottom-right */
+}
+
+/* Mozilla Firefox Slider Thumb */
 .slider-group input[type="range"]::-moz-range-thumb {
   width: 25px;
   height: 25px;
-  background: radial-gradient(circle, #e6e6e6, #c0c0c0);
-  border: 1px solid #aaa;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #c0c0c0);
+  border: 2px solid #aaa;
   border-radius: 50%;
-  box-shadow: -2px -2px 5px rgba(255, 255, 255, 0.6),
-    2px 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.6),
+    3px 3px 8px rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.slider-group input[type="range"]::-ms-thumb {
-  width: 25px;
-  height: 25px;
-  background: radial-gradient(circle, #e6e6e6, #c0c0c0);
-  border: 1px solid #aaa;
-  border-radius: 50%;
-  box-shadow: -2px -2px 5px rgba(255, 255, 255, 0.6),
-    2px 2px 5px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.slider-group input[type="range"]::-webkit-slider-thumb:hover {
+/* Firefox Hover Effect */
+.slider-group input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.1);
+  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.7),
+    4px 4px 10px rgba(0, 0, 0, 0.6);
 }
 
-.slider-group input[type="range"]::-webkit-slider-thumb:active {
+/* Firefox Active Effect */
+.slider-group input[type="range"]::-moz-range-thumb:active {
   transform: scale(1.2);
-  background: radial-gradient(circle, #cfcfcf, #b0b0b0);
+  background: radial-gradient(circle at 30% 30%, #dddddd, #aaaaaa);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(255, 255, 255, 0.4);
 }
 
-.slider-group input[type="range"]:hover {
-  background: linear-gradient(145deg, #f0f0f0, #dcdcdc);
+/* Color Picker Styling */
+.slider-group input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #2a2a2a;
+  cursor: pointer;
+  margin-bottom: 10px;
+  background: #111;
+  box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.1),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.slider-group input[type="color"]::-webkit-color-swatch {
+  border-radius: 50%;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.4), 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Left Section Styling */
+.slider-group-left-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.slider-group-left-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 30px;
+}
+
+/* Left Section Styling */
+.slider-group-left-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.slider-group-left-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 30px;
+}
+
+.toggle-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+  align-items: center; /* Align items vertically */
+  margin-top: 20px;
+  width: 600px;
+}
+
+/* Container for Each Toggle */
+.toggle-group {
+  display: flex;
+  flex-direction: column; /* Stack label and toggle vertically */
+  align-items: center;
+  text-align: center;
+  gap: 10px; /* Space between the label and toggle */
+  /* width: 150px;  */
+}
+
+.toggle-group .label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  /* margin-bottom: 10px; */
+  border: 1px solid blue;
+  margin-left: 85px;
+}
+
+/* Align the label (text) with the switch */
+.toggle-group span {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 5em;
+  height: 2.5em;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+/* Hide default HTML checkbox */
+.switch .cb {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.toggle {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background-color: #1a1a1a;
+  border-radius: 0.1em;
+  transition: 0.4s;
+  text-transform: uppercase;
+  font-weight: 700;
+  overflow: hidden;
+  box-shadow: -0.3em 0 0 0 #1a1a1a, -0.3em 0.3em 0 0 #1a1a1a,
+    0.3em 0 0 0 #1a1a1a, 0.3em 0.3em 0 0 #1a1a1a, 0 0.3em 0 0 #1a1a1a;
+
+  box-sizing: border-box; /* Consistent box sizing */
+}
+
+.toggle > .left {
+  position: absolute;
+  display: flex;
+  width: 50%;
+  height: 88%;
+  background-color: #2c2c2c;
+  color: #f3f3f3;
+  left: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  transform-origin: right;
+  transform: rotateX(10deg);
+  transform-style: preserve-3d;
+  transition: all 150ms;
+}
+
+.left::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #3a3a3a;
+  transform-origin: center left;
+  transform: rotateY(90deg);
+}
+
+.left::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #1e1e1e;
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+}
+
+.toggle > .right {
+  position: absolute;
+  display: flex;
+  width: 50%;
+  height: 88%;
+  background-color: #2c2c2c;
+  color: #3a3a3a;
+  right: 1px;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  transform-origin: left;
+  transform: rotateX(10deg) rotateY(-45deg);
+  transform-style: preserve-3d;
+  transition: all 150ms;
+}
+
+.right::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #3a3a3a;
+  transform-origin: center right;
+  transform: rotateY(-90deg);
+}
+
+.right::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #1e1e1e;
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+}
+
+.switch input:checked + .toggle > .left {
+  transform: rotateX(10deg) rotateY(45deg);
+  color: #3a3a3a;
+}
+
+.switch input:checked + .toggle > .right {
+  transform: rotateX(10deg) rotateY(0deg);
+  color: #6b96e0;
+}
+
+/* Button Styling */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  cursor: pointer;
+  width: 150px;
+  height: 50px;
+  background-image: linear-gradient(to top, #d8d9db 0%, #fff 80%, #fdfdfd 100%);
+  border-radius: 30px;
+  border: 1px solid #8f9092;
+  transition: all 0.2s ease;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #606060;
+  text-shadow: 0 1px #fff;
+  margin: 10px; /* Add spacing between buttons */
+}
+
+button:hover {
+  box-shadow: 0 4px 3px 1px #fcfcfc, 0 6px 8px #d6d7d9, 0 -4px 4px #cecfd1,
+    0 -6px 4px #fefefe, inset 0 0 3px 3px #cecfd1;
+}
+
+button:active {
+  box-shadow: 0 4px 3px 1px #fcfcfc, 0 6px 8px #d6d7d9, 0 -4px 4px #cecfd1,
+    0 -6px 4px #fefefe, inset 0 0 5px 3px #999, inset 0 0 30px #aaa;
+}
+
+button:focus {
+  outline: none; /* Remove the default focus outline */
+  box-shadow: none; /* Ensure no box-shadow persists */
+}
+
+/* Button Container Styling */
+.bottom-buttons-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Add spacing between buttons */
+  padding: 10px 0;
+  background: #333;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate(0px, 0px);
+  }
+  20% {
+    transform: translate(-10px, 0px);
+  }
+  40% {
+    transform: translate(10px, 0px);
+  }
+  60% {
+    transform: translate(-10px, 0px);
+  }
+  80% {
+    transform: translate(10px, 0px);
+  }
+}
+/* Class to apply the shake effect */
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+/* Common vibration keyframes */
+@keyframes shake-left-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+@keyframes shake-up-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  75% {
+    transform: translateY(10px);
+  }
+}
+/* Classes to trigger vibration */
+.shake-left-right {
+  animation: shake-left-right 0.5s ease-in-out;
+}
+.shake-up-down {
+  animation: shake-up-down 0.5s ease-in-out;
 }
