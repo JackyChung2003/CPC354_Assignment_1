@@ -17,6 +17,10 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="style.css" />
 
+    <!-- <style>
+      @import url("https://fonts.googleapis.com/css2?family=Electrolize&display=swap");
+    </style> -->
+
     <!-- Vertex Shader Section-->
     <script id="vertex-shader" type="x-shader/x-vertex">
       // Declare the global variable(s) for draw calls
@@ -77,7 +81,11 @@
 
   <body>
     <div class="whole-tv">
-      <div class="antenna-container"></div>
+      <div class="antenna-container">
+        <div class="antenna-left"></div>
+        <div class="antenna-right"></div>
+      </div>
+
       <div class="television-container">
         <div class="television-inner">
           <div class="television-left-section">
@@ -180,7 +188,7 @@
                       name="sound-choice"
                       value="bouncing-sound-single.mp3"
                     />
-                    <span class="text">Bounce</span>
+                    <span class="text">Boing</span>
                     <span class="bottom-line"></span>
                   </label>
 
@@ -217,7 +225,7 @@
                       value="1"
                       checked
                     />
-                    <span class="text">Texture 1</span>
+                    <span class="text">Base</span>
                     <span class="bottom-line"></span>
                   </label>
 
@@ -229,7 +237,7 @@
                       name="texture-choice"
                       value="2"
                     />
-                    <span class="text">Texture 2</span>
+                    <span class="text">Brick</span>
                     <span class="bottom-line"></span>
                   </label>
 
@@ -241,7 +249,7 @@
                       name="texture-choice"
                       value="3"
                     />
-                    <span class="text">Texture 3</span>
+                    <span class="text">Dot</span>
                     <span class="bottom-line"></span>
                   </label>
                 </div>
@@ -249,7 +257,7 @@
             </div>
           </div>
           <div class="television-lateral">
-            <div>
+            <div class="counter-container">
               <label for="wall-hit-count">Wall Hit Count:</label>
               <p id="wall-hit-count">0</p>
             </div>
