@@ -533,7 +533,7 @@ function getUIElement()
         const blob = new Blob([JSON.stringify(settings, null, 2)], { type: "text/plain" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "settings.txt";
+        a.download = "tv-gasket-settings.txt";
         a.click();
         URL.revokeObjectURL(a.href); // Clean up the URL
     });
