@@ -267,15 +267,26 @@ function getUIElement()
     });
 
     // Subdivision Slider
-    subdivSlider.onchange = function(event) 
-	{
-		subdivNum = event.target.value;
-		subdivValue.innerHTML = subdivNum;
-        // firstTime = false;
-        recompute();
-    };
+    // subdivSlider.onchange = function(event) 
+	// {
+	// 	subdivNum = event.target.value;
+	// 	subdivValue.innerHTML = subdivNum;
+    //     // firstTime = false;
+    //     recompute();
+    // };
+
+    subdivSlider.addEventListener("input", function () {
+        resetGasketPosition(); // Reset the gasket position on slider input
+        subdivNum = parseInt(subdivSlider.value); // Update subdivision number
+        subdivValue.innerHTML = subdivSlider.value; // Display the updated value
+        recompute(); // Recompute the geometry
+    });
 
     sizeSlider.addEventListener("input", function() {
+        // resetGasketPosition(); // Reset the gasket position on slider input
+
+        const newSize = parseFloat(sizeSlider.value); // Get the updated size value
+        resetGasketPosition(newSize);
         console.log("This is addEventListener");
         sizeValue = parseFloat(sizeSlider.value);
         firstTime = false;
@@ -286,7 +297,6 @@ function getUIElement()
         // sizeValue.innerHTML = sizeNum;
         recalcBoundary();
         recompute();
-        
     }
     );
     
@@ -903,18 +913,22 @@ function startAnimation() {
 
 }
 
-function resetGasketPosition() {
+function resetGasketPosition(newSizeValue = null) {
     // Reset the position of the gasket to the center of the screen
     theta = [0, 0, 0];
     move = [0, 0, 0];
     scaleNum = 1.5;
-    sizeValue = 1.0;
+    sizeValue = newSizeValue !== null ? newSizeValue : 1.0; // Use newSizeValue if provided
     boundaryHitCount = 0; // Reset wall hit count
     wallHitCountDisplay.textContent = boundaryHitCount;
     firstTime = true; // Indicate first-time rendering
     
-    sizeSlider.value = 1.;
-    document.getElementById("size-value").textContent = "1.0"; // Update size slider display
+    // sizeSlider.value = 1.;
+    // document.getElementById("size-value").textContent = "1.0"; // Update size slider display
+
+    sizeSlider.value = sizeValue; // Update the slider value
+    document.getElementById("size-value").textContent = sizeValue; // Update the size slider display
+    console.log("Size Value:", sizeValue);
 
     // To handle the case when the animation is running and user press it
     if (animFlag) {
@@ -1004,9 +1018,9 @@ function resetSettings() {
         vec4(1.0, 1.0, 1.0, 1.0), // Face 4
     ];
 
-    face1Color.value = "#ff3333";
-    face2Color.value = "#33ff33";
-    face3Color.value = "#3333ff";
+    face1Color.value = "#ff3366";
+    face2Color.value = "#00e6ff";
+    face3Color.value = "#33337f";
     face4Color.value = "#ffffff";
 
     face1Opacity.value = 1.0;
@@ -1171,13 +1185,31 @@ function vibratePage(direction) {
     }, 500);
 }
 
-// Apply settings function
 function applySettings(settings) {
     // Apply settings to the UI elements
     subdivSlider.value = settings.subdivision;
+    subdivValue.innerHTML = subdivSlider.value;
+
     sizeSlider.value = settings.size;
+    sizeValue.innerHTML = sizeSlider.value;
+
     speedSlider.value = settings.speed;
+    speedValue.innerHTML = speedSlider.value;
+    
     bgColor.value = settings.bgColor;
+    console.log("Background Color:", settings.bgColor);
+
+    // Update corresponding variables
+    subdivNum = parseInt(settings.subdivision);
+    sizeValue = parseFloat(settings.size);
+    speed = parseFloat(settings.speed);
+    scaleNum = settings.scale; // Update scaleNum from settings
+
+    console.log("Settings loaded:", settings);
+    console.log("Subdivisions:", subdivNum);
+    console.log("Size:", sizeValue);
+    console.log("Speed:", speed);
+    console.log("Scale:", scaleNum);
 
     // Apply face colors and opacities
     face1Color.value = settings.faceColors.face1.color;
@@ -1188,6 +1220,14 @@ function applySettings(settings) {
     face3Opacity.value = settings.faceColors.face3.opacity;
     face4Color.value = settings.faceColors.face4.color;
     face4Opacity.value = settings.faceColors.face4.opacity;
+
+    // Update the faceColors array with loaded values
+    faceColors = [
+        vec4(...hexToRgbArray(face1Color.value), parseFloat(face1Opacity.value)),
+        vec4(...hexToRgbArray(face2Color.value), parseFloat(face2Opacity.value)),
+        vec4(...hexToRgbArray(face3Color.value), parseFloat(face3Opacity.value)),
+        vec4(...hexToRgbArray(face4Color.value), parseFloat(face4Opacity.value)),
+    ];
 
     // Apply toggles
     toggleWallColor.checked = settings.randomColor;
@@ -1217,32 +1257,40 @@ function applySettings(settings) {
     moveDir[0] = settings.movementDirection.x;
     moveDir[1] = settings.movementDirection.y;
 
-    // Update the UI with the loaded settings
-    subdivValue.innerHTML = settings.subdivision;
-    sizeValue.innerHTML = settings.size;
-    speedValue.innerHTML = settings.speed;
+    divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], subdivNum); // Recalculate geometry
 
-    // Recompute the geometry
+    firstTime = false; 
+
+    // Recalculate boundaries
+    recalcBoundary();
+
+    // Recompute the geometry with updated subdivisions
     recompute();
 
-    // Render a single frame
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    const rgb = hexToRgb(settings.bgColor); // Convert HEX to RGB
+    gl.clearColor(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1.0); // Apply as background color
 
-    // Update the model view matrix with the loaded settings
-    modelViewMatrix = mat4();
-    modelViewMatrix = mult(modelViewMatrix, scale(scaleNum, scaleNum, scaleNum));
-    modelViewMatrix = mult(modelViewMatrix, translate(move[0], move[1], 0));
-    modelViewMatrix = mult(modelViewMatrix, rotateX(theta[0]));
-    modelViewMatrix = mult(modelViewMatrix, rotateY(theta[1]));
-    modelViewMatrix = mult(modelViewMatrix, rotateZ(theta[2]));
-
-    // Update uniforms
+    // Clear the color buffer only (not depth), without resetting the state of the animation
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    
+    // Use the current modelViewMatrix and other parameters to render the current state of the animation
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
     gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
-    gl.uniform2fv(transformLoc, move);
-
-    // Draw the geometry
+    
+    // Draw the primitive / geometric shape using the current state
     gl.drawArrays(gl.TRIANGLES, 0, points.length);
 
-    console.log("Settings applied and rendered:", settings);
+    resetGasket();
+
+
+    console.log("Settings applied successfully:", settings);
+}
+
+// Helper function to convert HEX color to RGB array
+function hexToRgbArray(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = ((bigint >> 16) & 255) / 255;
+    const g = ((bigint >> 8) & 255) / 255;
+    const b = (bigint & 255) / 255;
+    return [r, g, b];
 }
