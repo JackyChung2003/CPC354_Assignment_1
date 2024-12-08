@@ -192,17 +192,34 @@ function getUIElement()
     face4Color = document.getElementById("face4-color");
     face4Opacity = document.getElementById("face4-opacity");
 
+    face1OpacityValue = document.getElementById("face1-opacity-value");
+    face2OpacityValue = document.getElementById("face2-opacity-value");
+    face3OpacityValue = document.getElementById("face3-opacity-value");
+    face4OpacityValue = document.getElementById("face4-opacity-value");
+    
     face1Color.addEventListener("input", () => updateFaceColor(0, face1Color.value, face1Opacity.value));
-    face1Opacity.addEventListener("input", () => updateFaceColor(0, face1Color.value, face1Opacity.value));
+    face1Opacity.addEventListener("input", () => {
+        updateFaceColor(0, face1Color.value, face1Opacity.value);
+        face1OpacityValue.innerHTML = face1Opacity.value;
+    });
 
     face2Color.addEventListener("input", () => updateFaceColor(1, face2Color.value, face2Opacity.value));
-    face2Opacity.addEventListener("input", () => updateFaceColor(1, face2Color.value, face2Opacity.value));
+    face2Opacity.addEventListener("input", () => {
+        updateFaceColor(1, face2Color.value, face2Opacity.value);
+        face2OpacityValue.innerHTML = face2Opacity.value;
+    });
 
     face3Color.addEventListener("input", () => updateFaceColor(2, face3Color.value, face3Opacity.value));
-    face3Opacity.addEventListener("input", () => updateFaceColor(2, face3Color.value, face3Opacity.value));
+    face3Opacity.addEventListener("input", () => {
+        updateFaceColor(2, face3Color.value, face3Opacity.value);
+        face3OpacityValue.innerHTML = face3Opacity.value;
+    });
 
     face4Color.addEventListener("input", () => updateFaceColor(3, face4Color.value, face4Opacity.value));
-    face4Opacity.addEventListener("input", () => updateFaceColor(3, face4Color.value, face4Opacity.value));
+    face4Opacity.addEventListener("input", () => {
+        updateFaceColor(3, face4Color.value, face4Opacity.value);
+        face4OpacityValue.innerHTML = face4Opacity.value;
+    });
 
     // Toggles
     toggleWallColor = document.getElementById("toggle-wall-color");
